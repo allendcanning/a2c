@@ -1,4 +1,4 @@
-import urllib
+from urllib.request import urlopen
 import json
 import time
 from jose import jwk, jwt
@@ -11,7 +11,7 @@ keys_url = 'https://cognito-idp.{}.amazonaws.com/{}/.well-known/jwks.json'.forma
 # instead of re-downloading the public keys every time
 # we download them only on cold start
 # https://aws.amazon.com/blogs/compute/container-reuse-in-lambda/
-response = urllib.urlopen(keys_url)
+response = urlopen(keys_url)
 keys = json.loads(response.read())['keys']
 
 def lambda_handler(event, context):
