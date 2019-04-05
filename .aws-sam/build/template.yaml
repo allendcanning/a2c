@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Verifies an account
+Globals:
+  Function:
+    Runtime: python3.7
+    Timeout: 30
+Resources:
+  verifyAccountFunction:
+    Properties:
+      CodeUri: verifyAccountFunction
+      Events:
+        verifyAccountApi:
+          Properties:
+            Method: get
+            Path: /
+          Type: Api
+      Handler: lambda_function.lambda_handler
+    Type: AWS::Serverless::Function
+Transform: AWS::Serverless-2016-10-31
