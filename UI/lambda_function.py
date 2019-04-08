@@ -18,6 +18,9 @@ s3_html_bucket = "a2c-html-530317771161"
 # Connect to dynamo db table
 t = dynamodb.Table(table_name)
 
+def log_error(msg):
+  print(msg)
+
 def user_lookup(token):
   return False
 
@@ -156,6 +159,7 @@ def display_info(record):
 
 def lambda_handler(event, context):
   # Get jwt token
+  log_error("Event = "+event)
   if 'headers' in event:
     if 'Authorization' in event['headers']:
       token = event['headers']['Authorization']
