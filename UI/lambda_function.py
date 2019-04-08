@@ -158,16 +158,13 @@ def display_info(record):
   return user_record
 
 def lambda_handler(event, context):
+  token = False
   # Get jwt token
   log_error("Event = "+json.dumps(event))
   if 'headers' in event:
     if event['headers'] != None:
       if 'Authorization' in event['headers']:
         token = event['headers']['Authorization']
-      else:
-        token = False
-  else:
-    token = False
 
   # Verify token and get username
   if token != False:
