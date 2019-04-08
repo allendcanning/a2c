@@ -27,3 +27,13 @@ Resources:
 #    Properties:
 #      RestApiId: !Ref portalAPI
 #      ParentId: !GetAtt ["portalAPI", "RootResourceId"]
+#  portalAPIMethodGet:
+#    Type: AWS::ApiGateway::Method
+#    Properties:
+#       RestApiId: !Ref portalAPI
+#       ResourceId: !GetAtt ["portalAPI", "RootResourceId"]
+#       HttpMethod: "GET"
+#       AuthorizationType: "NONE"
+#       Integration:
+#         Type: "AWS"
+#         Uri: !Join ['',['arn:aws:apigateway:us-east-1:lambda:path',!GetAtt [displayPortalFunction, Arn]]

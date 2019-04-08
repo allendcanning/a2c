@@ -190,4 +190,6 @@ def lambda_handler(event, context):
 
   content += "</body></html>"
 
-  return content
+  return { 'statusCode': 200,
+           'body': content
+           }
