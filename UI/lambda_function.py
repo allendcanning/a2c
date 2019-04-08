@@ -161,7 +161,7 @@ def lambda_handler(event, context):
   # Get jwt token
   log_error("Event = "+json.dumps(event))
   if 'headers' in event:
-    if event['headers'] != None
+    if event['headers'] != None:
       if 'Authorization' in event['headers']:
         token = event['headers']['Authorization']
       else:
