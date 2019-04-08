@@ -159,7 +159,7 @@ def display_info(record):
 
 def lambda_handler(event, context):
   # Get jwt token
-  log_error("Event = "+event)
+  log_error("Event = "+json.dumps(event))
   if 'headers' in event:
     if 'Authorization' in event['headers']:
       token = event['headers']['Authorization']
