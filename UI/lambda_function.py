@@ -262,7 +262,7 @@ def lambda_handler(event, context):
 
   # Get username from query string, for now
   if 'queryStringParameters' in event:
-    if ['username'] in event['queryStringParameters']:
+    if 'username' in event['queryStringParameters']:
       username = event['queryStringParameters']['username']
 
   css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+s3_html_bucket+'/css/a2c.css" type="text/css" />'
