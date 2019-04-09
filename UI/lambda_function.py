@@ -174,11 +174,11 @@ def edit_academic_info(record):
   user_record += '<div class="divTableCell">'
   user_record += 'Year of Graduation: <select name="yog">'
   for y in range(2020,2028):
-    user_record += '<option value="'+y+'"'
+    user_record += '<option value="'+str(y)+'"'
     if 'yog' in record:
       if record['yog'] == y:
         user_record += ' selected'
-    user_record += '>'+y+'</option>'
+    user_record += '>'+str(y)+'</option>'
   user_record += '</select>'
   user_record += '</div>'
   user_record += '</div>\n'
