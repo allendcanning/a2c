@@ -56,6 +56,7 @@ def display_info(record):
   user_record += '</div>'
   user_record += '</div>\n'
 
+  user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableCell">Email: '
   if 'email' in record:
     user_record += record['email']
@@ -64,6 +65,7 @@ def display_info(record):
   user_record += '</div>'
   user_record += '</div>\n'
    
+  user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableCell">Phone: '
   if 'phone' in record:
     user_record += record['phone']
@@ -72,6 +74,7 @@ def display_info(record):
   user_record += '</div>'
   user_record += '</div>\n'
 
+  user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableCell">Address: '
   if 'address' in record:
     user_record += record['address']+', '
@@ -87,6 +90,42 @@ def display_info(record):
     user_record += '&nbsp; '
   if 'zip' in record:
     user_record += record['zip']
+  else:
+    user_record += '&nbsp;'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableRow">\n'
+  user_record += '<div class="divTableCell">Date of Birth: '
+  if 'dob' in record:
+    user_record += record['dob']
+  else:
+    user_record += '&nbsp;'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableRow">\n'
+  user_record += '<div class="divTableCell">Parents: '
+  if 'parents' in record:
+    user_record += record['parents']
+  else:
+    user_record += '&nbsp;'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableRow">\n'
+  user_record += '<div class="divTableCell">Parents Email: '
+  if 'parentsemail' in record:
+    user_record += record['parentsemail']
+  else:
+    user_record += '&nbsp;'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableRow">\n'
+  user_record += '<div class="divTableCell">Parents Phone: '
+  if 'parentsphone' in record:
+    user_record += record['parentsphone']
   else:
     user_record += '&nbsp;'
   user_record += '</div>'
@@ -138,7 +177,6 @@ def display_info(record):
   user_record += '</div>'
   user_record += '</div>\n'
 
-  user_record += '<div class="divTableRow"></div>\n'
   user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableCell"><strong>Athletic Information:</strong></div>'
   user_record += '</div>\n'
@@ -191,6 +229,17 @@ def display_info(record):
   user_record += '</div>'
   user_record += '</div>\n'
 
+  user_record += '<div class="divTableRow">\n'
+  user_record += '<div class="divTableCell">Athletic Statistics: '
+  if 'stats' in record:
+    user_record += record['stats']
+  else:
+    user_record += '&nbsp;'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  # End of table body and table
+  user_record += "</div>\n</div>"
   return user_record
 
 def lambda_handler(event, context):
