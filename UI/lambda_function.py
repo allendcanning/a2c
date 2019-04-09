@@ -42,14 +42,66 @@ def get_user_data(username):
 
   return user_record
 
-def display_edit_info(record):
-  return False
+def display_edit_info(editarea,record):
+  edit_record = '<form method="post" action="">'
+  if editarea == 'personal':
+    edit_record += 'First name: <input type="text" name="first" value="'
+    if 'first' in record:
+      edit_record += record['first']
+    edit_record += '>'
+    edit_record += 'Last name: <input type="text" name="last" value="'
+    if 'last' in record:
+      edit_record += record['last']
+    edit_record += '>'
+    edit_record += 'Email: <input type="email" name="email" value="'
+    if 'email' in record:
+      edit_record += record['email']
+    edit_record += '>'
+    edit_record += 'Phone: <input type="text" name="phone" value="'
+    if 'phone' in record:
+      edit_record += record['phone']
+    edit_record += '>'
+    edit_record += 'Address: <input type="text" name="address" value="'
+    if 'address' in record:
+      edit_record += record['address']
+    edit_record += '>'
+    edit_record += 'City: <input type="text" name="city" value="'
+    if 'city' in record:
+      edit_record += record['city']
+    edit_record += '>'
+    edit_record += 'State: <input type="text" name="state" value="'
+    if 'state' in record:
+      edit_record += record['state']
+    edit_record += '>'
+    edit_record += 'Zip: <input type="text" name="zip" value="'
+    if 'zip' in record:
+      edit_record += record['zip']
+    edit_record += '>'
+    edit_record += 'Date of Birth: <input type="text" name="dob" value="'
+    if 'dob' in record:
+      edit_record += record['dob']
+    edit_record += '>'
+    edit_record += 'Parents: <input type="text" name="parents" value="'
+    if 'parents' in record:
+      edit_record += record['parents']
+    edit_record += '>'
+    edit_record += 'Parents Email: <input type="email" name="parentsemail" value="'
+    if 'parentsemail' in record:
+      edit_record += record['parentsemail']
+    edit_record += '>'
+    edit_record += 'Parents Phone: <input type="text" name="parentsphone" value="'
+    if 'parentsphone' in record:
+      edit_record += record['parentsphone']
+    edit_record += '>'
+
+  edit_record += '</form>'
+  return edit_record
 
 def display_info(record):
   user_record = '<div class="divTable">\n'
   user_record += '<div class="divTableBody">\n'
   user_record += '<div class="divTableRow">\n'
-  user_record += '<div class="divTableHeading"><strong>Personal Information:</strong> <a href="/?username='+record['username']+'">Edit</a></div>'
+  user_record += '<div class="divTableHeading"><strong>Personal Information:</strong> <a href="/?editarea=personal&username='+record['username']+'">Edit</a></div>'
   user_record += '</div>\n'
 
   user_record += '<div class="divTableCell">Name: '
@@ -269,6 +321,8 @@ def lambda_handler(event, context):
   if 'queryStringParameters' in event:
     if 'username' in event['queryStringParameters']:
       username = event['queryStringParameters']['username']
+    if 'editarea' in event['queryStringParameters']:
+      editarea = event['queryStringParameters']['editarea'] 
 
   css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+s3_html_bucket+'/css/a2c.css" type="text/css" />'
   content = "<html><head><title>A2C Portal</title>\n"
@@ -280,6 +334,10 @@ def lambda_handler(event, context):
     record = get_user_data(username)
   else:
     record = {}
+
+  # Check for editing
+  if editarea != False:
+    display_edit_info(editarea,record)
 
   # Display user data
   portal_info = display_info(record)
