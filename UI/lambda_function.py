@@ -42,64 +42,135 @@ def get_user_data(username):
 
   return user_record
 
-def display_edit_info(editarea,record):
-  edit_record = '<form method="post" action="">'
-  if editarea == 'personal':
-    edit_record += 'First name: <input type="text" name="first" value="'
-    if 'first' in record:
-      edit_record += record['first']
-    edit_record += '">'
-    edit_record += 'Last name: <input type="text" name="last" value="'
-    if 'last' in record:
-      edit_record += record['last']
-    edit_record += '">'
-    edit_record += 'Email: <input type="email" name="email" value="'
-    if 'email' in record:
-      edit_record += record['email']
-    edit_record += '">'
-    edit_record += 'Phone: <input type="text" name="phone" value="'
-    if 'phone' in record:
-      edit_record += record['phone']
-    edit_record += '">'
-    edit_record += 'Address: <input type="text" name="address" value="'
-    if 'address' in record:
-      edit_record += record['address']
-    edit_record += '">'
-    edit_record += 'City: <input type="text" name="city" value="'
-    if 'city' in record:
-      edit_record += record['city']
-    edit_record += '">'
-    edit_record += 'State: <input type="text" name="state" value="'
-    if 'state' in record:
-      edit_record += record['state']
-    edit_record += '">'
-    edit_record += 'Zip: <input type="text" name="zip" value="'
-    if 'zip' in record:
-      edit_record += record['zip']
-    edit_record += '">'
-    edit_record += 'Date of Birth: <input type="text" name="dob" value="'
-    if 'dob' in record:
-      edit_record += record['dob']
-    edit_record += '">'
-    edit_record += 'Parents: <input type="text" name="parents" value="'
-    if 'parents' in record:
-      edit_record += record['parents']
-    edit_record += '">'
-    edit_record += 'Parents Email: <input type="email" name="parentsemail" value="'
-    if 'parentsemail' in record:
-      edit_record += record['parentsemail']
-    edit_record += '">'
-    edit_record += 'Parents Phone: <input type="text" name="parentsphone" value="'
-    if 'parentsphone' in record:
-      edit_record += record['parentsphone']
-    edit_record += '">'
+def edit_personal_info(record):
+  user_record = '<form method="post" action="">'
+  user_record += '<div class="divTableRow">\n'
+  user_record += '<div class="divTableHeading"><strong>Personal Information:</strong> <input type="submit" name="Submit"></div>'
+  user_record += '</div>\n'
 
-  edit_record += '</form>'
-  return edit_record
+  user_record += '<div class="divTableCell">'
+  user_record += 'First name: <input type="text" name="first" value="'
+  if 'first' in record:
+    user_record += record['first']
+  user_record += '">'
+  user_record += 'Last name: <input type="text" name="last" value="'
+  if 'last' in record:
+    user_record += record['last']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
 
-def display_info(record):
-  user_record = '<div class="divTable">\n'
-  user_record += '<div class="divTableBody">\n'
+  user_record += '<div class="divTableCell">'
+  user_record += 'Email: <input type="email" name="email" value="'
+  if 'email' in record:
+    user_record += record['email']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'Phone: <input type="text" name="phone" value="'
+  if 'phone' in record:
+    user_record += record['phone']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'Address: <input type="text" name="address" value="'
+  if 'address' in record:
+    user_record += record['address']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'City: <input type="text" name="city" value="'
+  if 'city' in record:
+    user_record += record['city']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'State: <input type="text" name="state" value="'
+  if 'state' in record:
+    user_record += record['state']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'Zip: <input type="text" name="zip" value="'
+  if 'zip' in record:
+    user_record += record['zip']
+  user_record += 'Address: <input type="text" name="address" value="'
+  if 'address' in record:
+    user_record += record['address']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'City: <input type="text" name="city" value="'
+  if 'city' in record:
+    user_record += record['city']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'State: <input type="text" name="state" value="'
+  if 'state' in record:
+    user_record += record['state']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'Zip: <input type="text" name="zip" value="'
+  if 'zip' in record:
+    user_record += record['zip']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'Date of Birth: <input type="text" name="dob" value="'
+  if 'dob' in record:
+    user_record += record['dob']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'Parents: <input type="text" name="parents" value="'
+  if 'parents' in record:
+    user_record += record['parents']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'Parents Email: <input type="email" name="parentsemail" value="'
+  if 'parentsemail' in record:
+    user_record += record['parentsemail']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'Parents Phone: <input type="text" name="parentsphone" value="'
+  if 'parentsphone' in record:
+    user_record += record['parentsphone']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '</form>'
+  return user_record
+
+def display_personal_info(record):
   user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableHeading"><strong>Personal Information:</strong> <a href="/Stage/?editarea=personal&username='+record['username']+'">Edit</a></div>'
   user_record += '</div>\n'
@@ -190,8 +261,10 @@ def display_info(record):
     user_record += '&nbsp;'
   user_record += '</div>'
   user_record += '</div>\n'
+  
+  return user_record
 
-  user_record += '<div class="divTableRow"></div>\n'
+def display_academic_info(record):
   user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableHeading"><strong>Academic Information:</strong></div>'
   user_record += '</div>\n'
@@ -237,6 +310,9 @@ def display_info(record):
   user_record += '</div>'
   user_record += '</div>\n'
 
+  return user_record
+
+def display_athletic_info(record):
   user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableHeading"><strong>Athletic Information:</strong></div>'
   user_record += '</div>\n'
@@ -298,8 +374,6 @@ def display_info(record):
   user_record += '</div>'
   user_record += '</div>\n'
 
-  # End of table body and table
-  user_record += "</div>\n</div>"
   return user_record
 
 def lambda_handler(event, context):
@@ -337,16 +411,29 @@ def lambda_handler(event, context):
   else:
     record = {}
 
+  content += '<div class="divTable">\n'
+  content += '<div class="divTableBody">\n'
+
   # Check for editing
-  if editarea != False:
-    edit_info = display_edit_info(editarea,record)
+  if editarea == "personal":
+    content += edit_personal_info(record)
+    content += display_academic_info(record)
+    content += display_athletic_info(record)
+  elif editarea == "academic":
+    content += display_personal_info(record)
+    content += edit_academic_info(record)
+    content += display_athletic_info(record)
+  elif editarea == "athletic":
+    content += display_personal_info(record)
+    content += display_academic_info(record)
+    content += edit_athletic_info(record)
+  else:
+    content += display_personal_info(record)
+    content += display_academic_info(record)
+    content += display_athletic_info(record)
 
-  content += edit_info
-
-  # Display user data
-  portal_info = display_info(record)
-
-  content += portal_info
+  # End of table body and table
+  content += "</div>\n</div>"
 
   content += "</body></html>"
 
