@@ -101,7 +101,7 @@ def display_info(record):
   user_record = '<div class="divTable">\n'
   user_record += '<div class="divTableBody">\n'
   user_record += '<div class="divTableRow">\n'
-  user_record += '<div class="divTableHeading"><strong>Personal Information:</strong> <a href="/?editarea=personal&username='+record['username']+'">Edit</a></div>'
+  user_record += '<div class="divTableHeading"><strong>Personal Information:</strong> <a href="/Stage/?editarea=personal&username='+record['username']+'">Edit</a></div>'
   user_record += '</div>\n'
 
   user_record += '<div class="divTableCell">Name: '
