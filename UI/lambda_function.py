@@ -25,11 +25,13 @@ def user_lookup(token):
   return False
 
 def get_user_data(username):
-  user_record = {}
+  user_record = {
+    'username': username
+  }
 
   try:
     user_record = t.get_item(
-      Key={ 'id': username
+      Key={ 'username': username
           }
       )
   except ClientError as e:
@@ -44,7 +46,7 @@ def display_info(record):
   user_record = '<div class="divTable">\n'
   user_record += '<div class="divTableBody">\n'
   user_record += '<div class="divTableRow">\n'
-  user_record += '<div class="divTableHeading"><strong>Personal Information:</strong></div>'
+  user_record += '<div class="divTableHeading"><strong>Personal Information:</strong> <a href="/?username='+record['username']+'">Edit</a></div>'
   user_record += '</div>\n'
 
   user_record += '<div class="divTableCell">Name: '
