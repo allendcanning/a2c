@@ -98,14 +98,12 @@ def display_info(record):
   user_record += '</div>\n'
 
   user_record += '<div class="divTableRow">\n'
-
   user_record += '<div class="divTableCell">GPA: '
   if 'gpa' in record:
     user_record += record['gpa']
   else:
     user_record += '&nbsp;'
   user_record += '</div>'
-  user_record += '</div>\n'
 
   user_record += '<div class="divTableCell">Rank: '
   if 'rank' in record:
@@ -113,7 +111,6 @@ def display_info(record):
   else:
     user_record += '&nbsp;'
   user_record += '</div>'
-  user_record += '</div>\n'
 
   user_record += '<div class="divTableCell">YOG: '
   if 'yog' in record:
@@ -123,13 +120,13 @@ def display_info(record):
   user_record += '</div>'
   user_record += '</div>\n'
 
+  user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableCell">ACT: '
   if 'act' in record:
     user_record += record['act']
   else:
     user_record += '&nbsp;'
   user_record += '</div>'
-  user_record += '</div>\n'
 
   user_record += '<div class="divTableCell">SAT: '
   if 'satw' in record:
@@ -150,6 +147,45 @@ def display_info(record):
   user_record += '<div class="divTableCell">Sport: '
   if 'sport' in record:
     user_record += record['sport']
+  else:
+    user_record += '&nbsp;'
+  user_record += '</div>'
+
+  user_record += '<div class="divTableCell">Position: '
+  if 'position' in record:
+    user_record += record['position']
+  else:
+    user_record += '&nbsp;'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableRow">\n'
+  user_record += '<div class="divTableCell">Strong hand: '
+  if 'hand' in record:
+    user_record += record['hand']
+  else:
+    user_record += '&nbsp;'
+  user_record += '</div>'
+
+  user_record += '<div class="divTableCell">Height: '
+  if 'height' in record:
+    user_record += record['height']
+  else:
+    user_record += '&nbsp;'
+  user_record += '</div>'
+
+  user_record += '<div class="divTableCell">Weight: '
+  if 'weight' in record:
+    user_record += record['weight']
+  else:
+    user_record += '&nbsp;'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableRow">\n'
+  user_record += '<div class="divTableCell">Other sports: '
+  if 'othersports' in record:
+    user_record += record['othersports']
   else:
     user_record += '&nbsp;'
   user_record += '</div>'
