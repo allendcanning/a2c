@@ -171,7 +171,7 @@ def edit_personal_info(record):
   return user_record
 
 def display_personal_info(record):
-  user_record += '<div class="divTableRow">\n'
+  user_record = '<div class="divTableRow">\n'
   user_record += '<div class="divTableHeading"><strong>Personal Information:</strong> <a href="/Stage/?editarea=personal&username='+record['username']+'">Edit</a></div>'
   user_record += '</div>\n'
 
@@ -265,8 +265,8 @@ def display_personal_info(record):
   return user_record
 
 def display_academic_info(record):
-  user_record += '<div class="divTableRow">\n'
-  user_record += '<div class="divTableHeading"><strong>Academic Information:</strong></div>'
+  user_record = '<div class="divTableRow">\n'
+  user_record += '<div class="divTableHeading"><strong>Academic Information:</strong> <a href="/Stage/?editarea=academic&username='+record['username']+'">Edit</a></div>'
   user_record += '</div>\n'
 
   user_record += '<div class="divTableRow">\n'
@@ -313,8 +313,8 @@ def display_academic_info(record):
   return user_record
 
 def display_athletic_info(record):
-  user_record += '<div class="divTableRow">\n'
-  user_record += '<div class="divTableHeading"><strong>Athletic Information:</strong></div>'
+  user_record = '<div class="divTableRow">\n'
+  user_record += '<div class="divTableHeading"><strong>Athletic Information:</strong> <a href="/Stage/?editarea=athletic&username='+record['username']+'">Edit</a></div>'
   user_record += '</div>\n'
 
   user_record += '<div class="divTableRow">\n'
