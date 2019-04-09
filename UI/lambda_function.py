@@ -339,7 +339,9 @@ def lambda_handler(event, context):
 
   # Check for editing
   if editarea != False:
-    display_edit_info(editarea,record)
+    edit_info = display_edit_info(editarea,record)
+
+  content += edit_info
 
   # Display user data
   portal_info = display_info(record)
