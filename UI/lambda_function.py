@@ -41,7 +41,7 @@ def display_info(record):
   user_record = '<div class="divTable">\n'
   user_record += '<div class="divTableBody">\n'
   user_record += '<div class="divTableRow">\n'
-  user_record += '<div class="divTableCell"><strong>Personal Information:</strong></div>'
+  user_record += '<div class="divTableHeading"><strong>Personal Information:</strong></div>'
   user_record += '</div>\n'
 
   user_record += '<div class="divTableCell">Name: '
@@ -133,7 +133,7 @@ def display_info(record):
 
   user_record += '<div class="divTableRow"></div>\n'
   user_record += '<div class="divTableRow">\n'
-  user_record += '<div class="divTableCell"><strong>Academic Information:</strong></div>'
+  user_record += '<div class="divTableHeading"><strong>Academic Information:</strong></div>'
   user_record += '</div>\n'
 
   user_record += '<div class="divTableRow">\n'
@@ -178,7 +178,7 @@ def display_info(record):
   user_record += '</div>\n'
 
   user_record += '<div class="divTableRow">\n'
-  user_record += '<div class="divTableCell"><strong>Athletic Information:</strong></div>'
+  user_record += '<div class="divTableHeading"><strong>Athletic Information:</strong></div>'
   user_record += '</div>\n'
 
   user_record += '<div class="divTableRow">\n'
@@ -230,7 +230,7 @@ def display_info(record):
   user_record += '</div>\n'
 
   user_record += '<div class="divTableRow">\n'
-  user_record += '<div class="divTableCell">Athletic Statistics: '
+  user_record += '<div class="divTableHeading">Athletic Statistics: '
   if 'stats' in record:
     user_record += record['stats']
   else:
