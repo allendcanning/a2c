@@ -323,6 +323,8 @@ def lambda_handler(event, context):
       username = event['queryStringParameters']['username']
     if 'editarea' in event['queryStringParameters']:
       editarea = event['queryStringParameters']['editarea'] 
+    else:
+      editarea = False
 
   css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+s3_html_bucket+'/css/a2c.css" type="text/css" />'
   content = "<html><head><title>A2C Portal</title>\n"
