@@ -48,6 +48,7 @@ def edit_personal_info(record):
   user_record += '<div class="divTableHeading"><strong>Personal Information:</strong> <input type="submit" name="Submit"></div>'
   user_record += '</div>\n'
 
+  user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableCell">'
   user_record += 'First name: <input type="text" name="first" value="'
   if 'first' in record:
@@ -147,6 +148,124 @@ def edit_personal_info(record):
   user_record += '</div>\n'
 
   user_record += '</form>'
+  return user_record
+
+def edit_academic_info(record):
+  user_record = '<form method="post" action="">'
+  user_record += '<div class="divTableRow">\n'
+  user_record += '<div class="divTableHeading"><strong>Academic Information:</strong> <input type="submit" name="Submit"></div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableRow">\n'
+  user_record += '<div class="divTableCell">'
+  user_record += 'GPA: <input type="text" name="gpa" value="'
+  if 'gpa' in record:
+    user_record += record['gpa']
+  user_record += '">'
+  user_record += '</div>'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'Rank: <input type="text" name="rank" value="'
+  if 'rank' in record:
+    user_record += record['rank']
+  user_record += '">'
+  user_record += '</div>'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'Year of Graduation: <select name="yog">'
+  for y in range(2020,2028):
+    user_record += '<option value="'+y+'"'
+    if 'yog' in record:
+      if record['yog'] == y:
+        user_record += ' selected'
+    user_record += '>'+y+'</option>'
+  user_record += '</select>'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableRow">\n'
+  user_record += '<div class="divTableCell">'
+  user_record += 'ACT: <input type="text" name="act" value="'
+  if 'act' in record:
+    user_record += record['act']
+  user_record += '">'
+  user_record += '</div>'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'SAT Math: <input type="text" name="satm" value="'
+  if 'satm' in record:
+    user_record += record['satm']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '<div class="divTableCell">'
+  user_record += 'SAT Writing: <input type="text" name="satw" value="'
+  if 'satw' in record:
+    user_record += record['satw']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  return user_record
+
+def edit_athletic_info(record):
+  user_record = '<form method="post" action="">'
+  user_record += '<div class="divTableRow">\n'
+  user_record += '<div class="divTableHeading"><strong>Athletic Information:</strong> <input type="submit" name="Submit"></div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableRow">\n'
+  user_record += '<div class="divTableCell">'
+  user_record += 'Sport: <input type="text" name="sport" value="'
+  if 'sport' in record:
+    user_record += record['sport']
+  user_record += '">'
+  user_record += '</div>'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'Position: <input type="text" name="position" value="'
+  if 'position' in record:
+    user_record += record['position']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableRow">\n'
+  user_record += '<div class="divTableCell">'
+  user_record += 'Strong hand: <select name="stronghand">'
+  hands = ['right', 'left']
+  for h in hands:
+    user_record += '<option value="'+h+'"'
+    if 'stronghand' in record:
+      if record['stronghand'] == h:
+        user_record += ' selected'
+    user_record += '>'+h+'</option>'
+  user_record += '</select>'
+  user_record += '</div>'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'Height: <input type="text" name="height" value="'
+  if 'height' in record:
+    user_record += record['height']
+  user_record += '">'
+  user_record += '</div>'
+
+  user_record += '<div class="divTableCell">'
+  user_record += 'Weight: <input type="text" name="weight" value="'
+  if 'weight' in record:
+    user_record += record['weight']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
+  user_record += '<div class="divTableRow">\n'
+  user_record += '<div class="divTableCell">'
+  user_record += 'Other Sports: <input type="text" name="othersports" value="'
+  if 'othersports' in record:
+    user_record += record['othersports']
+  user_record += '">'
+  user_record += '</div>'
+  user_record += '</div>\n'
+
   return user_record
 
 def display_personal_info(record):
