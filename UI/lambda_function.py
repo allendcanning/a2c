@@ -34,6 +34,8 @@ def get_user_data(username):
       )
   except ClientError as e:
     log_error("Error is "+e.response['Error']['Message'])
+
+  if 'username' not in user_record:
     user_record = {
       'username': username
     }
