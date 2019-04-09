@@ -53,6 +53,8 @@ def edit_personal_info(record):
   if 'first' in record:
     user_record += record['first']
   user_record += '">'
+  user_record += '</div>'
+  user_record += '<div class="divTableCell">'
   user_record += 'Last name: <input type="text" name="last" value="'
   if 'last' in record:
     user_record += record['last']
@@ -60,6 +62,7 @@ def edit_personal_info(record):
   user_record += '</div>'
   user_record += '</div>\n'
 
+  user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableCell">'
   user_record += 'Email: <input type="email" name="email" value="'
   if 'email' in record:
@@ -68,6 +71,7 @@ def edit_personal_info(record):
   user_record += '</div>'
   user_record += '</div>\n'
 
+  user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableCell">'
   user_record += 'Phone: <input type="text" name="phone" value="'
   if 'phone' in record:
@@ -76,13 +80,13 @@ def edit_personal_info(record):
   user_record += '</div>'
   user_record += '</div>\n'
 
+  user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableCell">'
   user_record += 'Address: <input type="text" name="address" value="'
   if 'address' in record:
     user_record += record['address']
   user_record += '">'
   user_record += '</div>'
-  user_record += '</div>\n'
 
   user_record += '<div class="divTableCell">'
   user_record += 'City: <input type="text" name="city" value="'
@@ -90,7 +94,6 @@ def edit_personal_info(record):
     user_record += record['city']
   user_record += '">'
   user_record += '</div>'
-  user_record += '</div>\n'
 
   user_record += '<div class="divTableCell">'
   user_record += 'State: <input type="text" name="state" value="'
@@ -98,34 +101,6 @@ def edit_personal_info(record):
     user_record += record['state']
   user_record += '">'
   user_record += '</div>'
-  user_record += '</div>\n'
-
-  user_record += '<div class="divTableCell">'
-  user_record += 'Zip: <input type="text" name="zip" value="'
-  if 'zip' in record:
-    user_record += record['zip']
-  user_record += 'Address: <input type="text" name="address" value="'
-  if 'address' in record:
-    user_record += record['address']
-  user_record += '">'
-  user_record += '</div>'
-  user_record += '</div>\n'
-
-  user_record += '<div class="divTableCell">'
-  user_record += 'City: <input type="text" name="city" value="'
-  if 'city' in record:
-    user_record += record['city']
-  user_record += '">'
-  user_record += '</div>'
-  user_record += '</div>\n'
-
-  user_record += '<div class="divTableCell">'
-  user_record += 'State: <input type="text" name="state" value="'
-  if 'state' in record:
-    user_record += record['state']
-  user_record += '">'
-  user_record += '</div>'
-  user_record += '</div>\n'
 
   user_record += '<div class="divTableCell">'
   user_record += 'Zip: <input type="text" name="zip" value="'
@@ -135,6 +110,7 @@ def edit_personal_info(record):
   user_record += '</div>'
   user_record += '</div>\n'
 
+  user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableCell">'
   user_record += 'Date of Birth: <input type="text" name="dob" value="'
   if 'dob' in record:
@@ -143,6 +119,7 @@ def edit_personal_info(record):
   user_record += '</div>'
   user_record += '</div>\n'
 
+  user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableCell">'
   user_record += 'Parents: <input type="text" name="parents" value="'
   if 'parents' in record:
@@ -151,6 +128,7 @@ def edit_personal_info(record):
   user_record += '</div>'
   user_record += '</div>\n'
 
+  user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableCell">'
   user_record += 'Parents Email: <input type="email" name="parentsemail" value="'
   if 'parentsemail' in record:
@@ -159,6 +137,7 @@ def edit_personal_info(record):
   user_record += '</div>'
   user_record += '</div>\n'
 
+  user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableCell">'
   user_record += 'Parents Phone: <input type="text" name="parentsphone" value="'
   if 'parentsphone' in record:
