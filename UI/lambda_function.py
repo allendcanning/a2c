@@ -25,9 +25,7 @@ def user_lookup(token):
   return False
 
 def get_user_data(username):
-  user_record = {
-    'username': username
-  }
+  user_record = {}
 
   try:
     user_record = t.get_item(
@@ -36,6 +34,9 @@ def get_user_data(username):
       )
   except ClientError as e:
     log_error("Error is "+e.response['Error']['Message'])
+    user_record = {
+      'username': username
+    }
 
   return user_record
 
