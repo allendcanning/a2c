@@ -510,11 +510,11 @@ def lambda_handler(event, context):
       editarea = False
 
   if 'body' in event:
+    user_record['username'] = username
     if event['body'] != None:
       # Parse the post parameters
       postparams = event['body']
       user_record = {}
-      user_record['username'] = username
       for token in postparams.split('&'):
         key = token.split('=')[0]
         if key == "Submit":
