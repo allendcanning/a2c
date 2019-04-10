@@ -24,6 +24,10 @@ def log_error(msg):
 def user_lookup(token):
   return False
 
+def update_user_info(record):
+  # Add some error handling
+  t.put_item(Item=record)
+
 def get_user_data(username):
   user_record = {}
 
@@ -232,7 +236,7 @@ def edit_athletic_info(record):
   user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableCell">'
   user_record += 'Strong hand: <select name="stronghand">'
-  hands = ['right', 'left']
+  hands = ['Right', 'Left']
   for h in hands:
     user_record += '<option value="'+h+'"'
     if 'stronghand' in record:
@@ -476,8 +480,10 @@ def display_athletic_info(record):
 
 def lambda_handler(event, context):
   token = False
-  # Get jwt token
+  action = "Form"
+
   log_error("Event = "+json.dumps(event))
+  # Get jwt token
   if 'headers' in event:
     if event['headers'] != None:
       if 'Authorization' in event['headers']:
@@ -497,6 +503,18 @@ def lambda_handler(event, context):
       editarea = event['queryStringParameters']['editarea'] 
     else:
       editarea = False
+
+  if 'body' in event:
+    # Parse the post parameters
+    postparams = event['body']
+    for token in postparams.split('&'):
+      key = token.split('=')[0]
+      value = token.split('=')[1]
+      user_record[key] = value
+
+  # If we have form data, update dynamo
+  if action == "Process":
+    update_user_info(user_record)
 
   css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+s3_html_bucket+'/css/a2c.css" type="text/css" />'
   content = "<html><head><title>A2C Portal</title>\n"

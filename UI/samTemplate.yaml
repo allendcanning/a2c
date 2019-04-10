@@ -17,6 +17,11 @@ Resources:
           Properties:
             Path: /
             Method: get
+        updatePortalApi:
+          Type: Api
+          Properties:
+            Path: /
+            Method: post
 #  portalAPI:
 #    Type: AWS::Serverless::Api
 #    Properties:
