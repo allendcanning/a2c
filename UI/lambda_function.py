@@ -322,11 +322,11 @@ def display_personal_info(record):
   else:
     user_record += '&nbsp;, '
   if 'city' in record:
-    user_record += record['city'],' '
+    user_record += record['city']+' '
   else:
     user_record += '&nbsp; '
   if 'state' in record:
-    user_record += record['state'],' '
+    user_record += record['state']+' '
   else:
     user_record += '&nbsp; '
   if 'zip' in record:
