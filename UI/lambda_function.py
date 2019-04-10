@@ -516,13 +516,17 @@ def lambda_handler(event, context):
       user_record['username'] = username
       for token in postparams.split('&'):
         key = token.split('=')[0]
+        if key == "Submit":
+          continue
         value = token.split('=')[1]
         user_record[key] = value
 
   # If we have form data, update dynamo
   if 'action' in user_record:
     if user_record['action'] == "Process":
+      del user_record['action']
       update_user_info(user_record)
+      editarea = False
 
   css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+s3_html_bucket+'/css/a2c.css" type="text/css" />'
   content = "<html><head><title>A2C Portal</title>\n"
