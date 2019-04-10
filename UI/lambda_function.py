@@ -47,7 +47,8 @@ def get_user_data(username):
   return user_record
 
 def edit_personal_info(record):
-  user_record = '<form method="post" action="">'
+  user_record = '<form method="post" action="">\n'
+  user_record = '<input type="hidden" name="action" value="Process">\n'
   user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableHeading"><strong>Personal Information:</strong> <input type="submit" name="Submit"></div>'
   user_record += '</div>\n'
@@ -156,6 +157,7 @@ def edit_personal_info(record):
 
 def edit_academic_info(record):
   user_record = '<form method="post" action="">'
+  user_record = '<input type="hidden" name="action" value="Process">\n'
   user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableHeading"><strong>Academic Information:</strong> <input type="submit" name="Submit"></div>'
   user_record += '</div>\n'
@@ -213,6 +215,7 @@ def edit_academic_info(record):
 
 def edit_athletic_info(record):
   user_record = '<form method="post" action="">'
+  user_record = '<input type="hidden" name="action" value="Process">\n'
   user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableHeading"><strong>Athletic Information:</strong> <input type="submit" name="Submit"></div>'
   user_record += '</div>\n'
@@ -480,7 +483,7 @@ def display_athletic_info(record):
 
 def lambda_handler(event, context):
   token = False
-  action = "Form"
+  user_record['action'] = "Form"
 
   log_error("Event = "+json.dumps(event))
   # Get jwt token
@@ -515,8 +518,9 @@ def lambda_handler(event, context):
         user_record[key] = value
 
   # If we have form data, update dynamo
-  if action == "Process":
-    update_user_info(user_record)
+  if 'action' in user_record:
+    if user_record['action'] == "Process":
+      update_user_info(user_record)
 
   css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+s3_html_bucket+'/css/a2c.css" type="text/css" />'
   content = "<html><head><title>A2C Portal</title>\n"
