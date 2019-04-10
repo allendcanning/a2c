@@ -48,7 +48,7 @@ def get_user_data(username):
 
 def edit_personal_info(record):
   user_record = '<form method="post" action="">\n'
-  user_record = '<input type="hidden" name="action" value="Process">\n'
+  user_record += '<input type="hidden" name="action" value="Process">\n'
   user_record += '<div class="divTableRow">\n'
   user_record += '<div class="divTableHeading"><strong>Personal Information:</strong> <input type="submit" name="Submit"></div>'
   user_record += '</div>\n'
