@@ -25,9 +25,25 @@ def log_error(msg):
 def user_lookup(token):
   return False
 
-def update_user_info(record):
+def update_user_info(editarea,record):
   # Add some error handling
-  t.update_item(Item=record)
+  if editarea == "Personal":
+    t.update_item(Key={ 'username': record['username'] },
+      UpdateExpression="set first=:first, last=:last, email=:email, phone=:phone, address=:address, city=:city, state=:state, zip=:zip, parents=:parents, parentsemail=:parentsemail, parentsphone=:parentsphone",
+      ExpressionAttributeValues={
+        ':first': record['first'],
+        ':last': record['last'],
+        ':email': record['email'],
+        ':phone': record['phone'],
+        ':address': record['address'],
+        ':city': record['city'],
+        ':state': record['state'],
+        ':zip': record['zip'],
+        ':parents': record['parents'],
+        ':parentsemail': record['parentsemail'],
+        ':parentsphone': record['parentsphone']
+      }
+    )
 
 def get_user_data(username):
   user_record = {}
