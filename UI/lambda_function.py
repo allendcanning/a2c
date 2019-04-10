@@ -483,6 +483,7 @@ def display_athletic_info(record):
 
 def lambda_handler(event, context):
   token = False
+  user_record = {}
   user_record['action'] = "Form"
 
   log_error("Event = "+json.dumps(event))
