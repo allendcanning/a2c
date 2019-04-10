@@ -32,14 +32,16 @@ def get_user_data(username):
   user_record = {}
 
   try:
-    user_record = t.get_item(
+    item = t.get_item(
       Key={ 'username': username
           }
       )
   except ClientError as e:
     log_error("Error is "+e.response['Error']['Message'])
 
-  log_error("Event = "+json.dumps(user_record))
+  user_record = item['Item']
+
+  log_error("Item = "+json.dumps(user_record))
 
   if 'username' not in user_record:
     user_record['usename'] = username
