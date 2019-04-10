@@ -513,6 +513,7 @@ def lambda_handler(event, context):
       # Parse the post parameters
       postparams = event['body']
       user_record = {}
+      user_record['username'] = username
       for token in postparams.split('&'):
         key = token.split('=')[0]
         value = token.split('=')[1]
