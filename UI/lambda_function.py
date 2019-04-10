@@ -27,7 +27,7 @@ def user_lookup(token):
 
 def update_user_info(record):
   # Add some error handling
-  t.put_item(Item=record)
+  t.update_item(Item=record)
 
 def get_user_data(username):
   user_record = {}
@@ -54,7 +54,7 @@ def edit_personal_info(record):
   user_record += '<input type="hidden" name="action" value="Process">\n'
   user_record += '<input type="hidden" name="username" value="'+record['username']+'">\n'
   user_record += '<div class="divTableRow">\n'
-  user_record += '<div class="divTableHeading"><strong>Personal Information:</strong> <input type="submit" name="Submit"><input type="cancel"></div>'
+  user_record += '<div class="divTableHeading"><strong>Personal Information:</strong> <input type="submit" name="Submit"><input type="reset"></div>'
   user_record += '</div>\n'
 
   user_record += '<div class="divTableRow">\n'
@@ -164,7 +164,7 @@ def edit_academic_info(record):
   user_record += '<input type="hidden" name="action" value="Process">\n'
   user_record += '<input type="hidden" name="username" value="'+record['username']+'">\n'
   user_record += '<div class="divTableRow">\n'
-  user_record += '<div class="divTableHeading"><strong>Academic Information:</strong> <input type="submit" name="Submit"><input type="cancel"></div>'
+  user_record += '<div class="divTableHeading"><strong>Academic Information:</strong> <input type="submit" name="Submit"><input type="reset"></div>'
   user_record += '</div>\n'
 
   user_record += '<div class="divTableRow">\n'
@@ -223,7 +223,7 @@ def edit_athletic_info(record):
   user_record += '<input type="hidden" name="action" value="Process">\n'
   user_record += '<input type="hidden" name="username" value="'+record['username']+'">\n'
   user_record += '<div class="divTableRow">\n'
-  user_record += '<div class="divTableHeading"><strong>Athletic Information:</strong> <input type="submit" name="Submit"><input type="cancel"></div>'
+  user_record += '<div class="divTableHeading"><strong>Athletic Information:</strong> <input type="submit" name="Submit"><input type="reset"></div>'
   user_record += '</div>\n'
 
   user_record += '<div class="divTableRow">\n'
