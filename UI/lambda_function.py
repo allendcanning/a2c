@@ -505,12 +505,13 @@ def lambda_handler(event, context):
       editarea = False
 
   if 'body' in event:
-    # Parse the post parameters
-    postparams = event['body']
-    for token in postparams.split('&'):
-      key = token.split('=')[0]
-      value = token.split('=')[1]
-      user_record[key] = value
+    if event['body'] != None:
+      # Parse the post parameters
+      postparams = event['body']
+      for token in postparams.split('&'):
+        key = token.split('=')[0]
+        value = token.split('=')[1]
+        user_record[key] = value
 
   # If we have form data, update dynamo
   if action == "Process":
