@@ -6,11 +6,27 @@ Globals:
     Runtime: python3.7
     Timeout: 30
 Resources:
+  displayPortalFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_function.lambda_handler
+      CodeUri: ./athlete/
+      Events:
+        displayPortalApi:
+          Type: Api
+          Properties:
+            Path: /
+            Method: get
+        updatePortalApi:
+          Type: Api
+          Properties:
+            Path: /
+            Method: post
   loginPortalFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: login_function.lambda_handler
-      CodeUri: ./function.zip
+      CodeUri: ./login/function.zip
       Events:
         formPortalApi:
           Type: Api

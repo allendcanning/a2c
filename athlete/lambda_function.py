@@ -28,9 +28,6 @@ t = dynamodb.Table(table_name)
 def log_error(msg):
   print(msg)
 
-def user_lookup(token):
-  return False
-
 def get_config_data(environment):
   client = boto3.client('ssm')
   config = {}
@@ -54,10 +51,6 @@ def get_config_data(environment):
   ssmpath="/a2c/"+environment+"/content_url"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['content_url'] =response['Parameter']['Value'] 
-
-  ssmpath="/a2c/"+environment+"/table_name"
-  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-  config['table_name'] =response['Parameter']['Value'] 
 
   return config
 
@@ -551,10 +544,10 @@ def lambda_handler(event, context):
   log_error("Event = "+json.dumps(event))
 
   # Get the environment from the context stage
-  environment = event['requestContext']['stage']
+  #environment = event['requestContext']['stage']
   # look up the config data using environment
-  config = get_config_data(environment)
-
+  #config = get_config_data(environment)
+  
   username = event['requestContext']['authorizer']['claims']['cognito:username']
   user_record['username'] = username
 

@@ -16,8 +16,8 @@ from urllib.request import urlopen
 # Set timezone
 os.environ['TZ'] = 'US/Eastern'
 time.tzset()
+content_url="https://byh6q12oyj.execute-api.us-east-1.amazonaws.com/dev/"
 
-#content_url="https://byh6q12oyj.execute-api.us-east-1.amazonaws.com/dev/"
 #s3_html_bucket = "a2c-html-530317771161"
 #cognito_pool = "us-east-1_DOD7SyKZu"
 #cognito_client_id = "2hfae0s8t0jb0gk1irv27dvsdc"
@@ -40,7 +40,7 @@ def get_config_data(environment):
 
   ssmpath="/a2c/"+environment+"/cognito_client_id"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-  config['cognito_cognito_client_id'] =response['Parameter']['Value'] 
+  config['cognito_client_id'] =response['Parameter']['Value'] 
 
   ssmpath="/a2c/"+environment+"/cognito_client_secret_hash"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
@@ -52,9 +52,9 @@ def get_config_data(environment):
 
   return config
 
-def validate_token(token):
+def validate_token(config,token):
   region = 'us-east-1'
-  keys_url = 'https://cognito-idp.{}.amazonaws.com/{}/.well-known/jwks.json'.format(region, cognito_pool)
+  keys_url = 'https://cognito-idp.{}.amazonaws.com/{}/.well-known/jwks.json'.format(region, config['cognito_pool'])
   response = urlopen(keys_url)
   keys = json.loads(response.read())['keys']
 
@@ -94,17 +94,17 @@ def validate_token(token):
       log_error('Token is expired')
       return False
 
-  if claims['aud'] != cognito_client_id:
+  if claims['aud'] != config['cognito_client_id']:
       log_error('Token claims not valid for this application')
       return False
   return token
 
-def authenticate_user(authparams):
+def authenticate_user(config,authparams):
   # Get cognito handle
   cognito = boto3.client('cognito-idp')
 
-  message = authparams['USERNAME'] + cognito_client_id
-  dig = hmac.new(key=bytes(cognito_client_secret_hash,'UTF-8'),msg=message.encode('UTF-8'),digestmod=hashlib.sha256).digest()
+  message = authparams['USERNAME'] + config['cognito_client_id']
+  dig = hmac.new(key=bytes(config['cognito_client_secret_hash'],'UTF-8'),msg=message.encode('UTF-8'),digestmod=hashlib.sha256).digest()
 
   authparams['SECRET_HASH'] = base64.b64encode(dig).decode()
 
@@ -112,12 +112,13 @@ def authenticate_user(authparams):
 
   # Initiate Authentication
   try:
-    response = cognito.admin_initiate_auth(UserPoolId=cognito_pool,
-                                 ClientId=cognito_client_id,
+    response = cognito.admin_initiate_auth(UserPoolId=config['cognito_pool'],
+                                 ClientId=config['cognito_client_id'],
                                  AuthFlow='ADMIN_NO_SRP_AUTH',
                                  AuthParameters=authparams)
     log_error(json.dumps(response))
-  except:
+  except ClientError as e:
+    log_error('Admin Initiate Auth failed: '+e.response['Error']['Message'])
     return False
 
   return response['AuthenticationResult']['IdToken']
@@ -131,7 +132,7 @@ def print_form():
 
   return content
 
-def set_portal_data(token,record):
+def set_portal_data(config,token,record):
   headers = { 'Authorization': token }
 
   data = ""
@@ -140,22 +141,22 @@ def set_portal_data(token,record):
 
   data = data.rstrip('&')
 
-  r = requests.post(content_url,headers=headers,data=data)
+  r = requests.post(config['content_url'],headers=headers,data=data)
 
   body = r.text
 
   return body
 
-def get_portal_data(token,editarea):
+def get_portal_data(config,token,editarea):
   headers = { 'Authorization': token }
 
   if editarea != False:
     log_error("Calling POST with "+editarea)
     data = "editarea="+editarea
-    r = requests.post(content_url,headers=headers,data=data)
+    r = requests.post(config['content_url'],headers=headers,data=data)
   else:
     log_error("Calling GET")
-    r = requests.get(content_url,headers=headers)
+    r = requests.get(config['content_url'],headers=headers)
 
   body = r.text
 
@@ -168,8 +169,13 @@ def lambda_handler(event, context):
 
   log_error("Event = "+json.dumps(event))
 
+  # Get the environment from the context stage
+  environment = event['requestContext']['stage']
+  # look up the config data using environment
+  config = get_config_data(environment)
+  
   # Build HTML content
-  css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+s3_html_bucket+'/css/a2c.css" type="text/css" />'
+  css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+config['s3_html_bucket']+'/css/a2c.css" type="text/css" />'
   content = "<html><head><title>A2C Portal</title>\n"
   content += css+'</head>'
   content += "<body><h3>A2C Portal</h3>"
@@ -177,21 +183,20 @@ def lambda_handler(event, context):
   # Get jwt token
   if 'headers' in event:
     if event['headers'] != None:
-      if 'Cookie' in event['headers']:
-        cookie = event['headers']['Cookie']
+      if 'cookie' in event['headers']:
+        cookie = event['headers']['cookie']
         token = cookie.split('=')[1]
         log_error('Got Token = '+token)
         if token != 'False':
-          token = validate_token(token)
-
-  if token == False:
-    content += print_form()
-  elif 'body' in event:
+          token = validate_token(config,token)
+          
+  if 'body' in event:
     if event['body'] != None:
       # Parse the post parameters
       postparams = event['body']
       auth = {}
       if '&' in postparams:
+        log_error('Parsing post params')
         for params in postparams.split('&'):
           key = params.split('=')[0]
           value = params.split('=')[1]
@@ -207,18 +212,21 @@ def lambda_handler(event, context):
           else: 
             record[key] = unquote_plus(value)
       else:
+        log_error('Parsing single post param: '+postparams)
         key = postparams.split('=')[0]
         value = postparams.split('=')[1]
-        record[key] = value
-
+        if key == 'editarea':
+          editarea = unquote_plus(value)
+        
       if 'USERNAME' in auth:
-        token = authenticate_user(auth)
-
+        token = authenticate_user(config,auth)
+        
+      log_error('Got token = '+token)
       if token != False:
         if 'action' in record:
-          content += set_portal_data(token,record)
+          content += set_portal_data(config,token,record)
         else:
-          content += get_portal_data(token,editarea)
+          content += get_portal_data(config,token,editarea)
       else:
         content += print_form()
     else:

@@ -10,7 +10,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: lambda_function.lambda_handler
-      CodeUri: ./
+      CodeUri: ./athlete/
       Events:
         displayPortalApi:
           Type: Api
@@ -22,34 +22,3 @@ Resources:
           Properties:
             Path: /
             Method: post
-#  displayCoachFunction:
-#    Type: AWS::Serverless::Function
-#    Properties:
-#      Handler: coach_function.lambda_handler
-#      CodeUri: ./
-#      Events:
-#        displayCoachApi:
-#          Type: Api
-#          Properties:
-#            Path: /
-#            Method: get
-#  portalAPI:
-#    Type: AWS::Serverless::Api
-#    Properties:
-#      Name: displayPortalApi
-#      StageName: dev
-#  portalAPIGet:
-#    Type: AWS::ApiGateway::Resource
-#    Properties:
-#      RestApiId: !Ref portalAPI
-#      ParentId: !GetAtt ["portalAPI", "RootResourceId"]
-#  portalAPIMethodGet:
-#    Type: AWS::ApiGateway::Method
-#    Properties:
-#       RestApiId: !Ref portalAPI
-#       ResourceId: !GetAtt ["portalAPI", "RootResourceId"]
-#       HttpMethod: "GET"
-#       AuthorizationType: "NONE"
-#       Integration:
-#         Type: "AWS"
-#         Uri: !Join ['',['arn:aws:apigateway:us-east-1:lambda:path',!GetAtt [displayPortalFunction, Arn]]
