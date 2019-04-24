@@ -11,7 +11,13 @@
 	display: table-header-group;
 	font-weight: bold;
 }
-.divTableCell, .divTableHead {
+.divTableHead {
+        background-color: #CCC;
+	border: 1px solid #999999;
+	display: table-cell;
+	padding: 3px 10px;
+}
+.divTableCell {
 	border: 1px solid #999999;
 	display: table-cell;
 	padding: 3px 10px;
@@ -23,4 +29,39 @@
 }
 .divTableBody {
 	display: table-row-group;
+}
+.topTable{
+  width: 80%;
+}
+.defTable {
+  width: 100%;
+  border: 1px solid #999999;
+}
+.areaHead {
+  background-color: #CCC;
+  text-align: left;
+}
+.header {
+  background-color: #EEE;
+  font-weight: bold;
+}
+.data {
+  border: 1px solid #999999;
+  padding: 3px 10px;
+}
+.athletedata {
+  border: 1px solid #999999;
+  padding: 3px 10px;
+  -webkit-column-count: 1;
+}
+.right {
+  vertical-align: top;
+  text-align: right; 
+}
+.athletic {
+  column-span: 2;
+}
+.athleticstats {
+  rows: 5;
+  columns: 40;
 }

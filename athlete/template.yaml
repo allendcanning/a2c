@@ -22,6 +22,17 @@ Resources:
           Properties:
             Path: /
             Method: post
+#  displayCoachFunction:
+#    Type: AWS::Serverless::Function
+#    Properties:
+#      Handler: coach_function.lambda_handler
+#      CodeUri: ./
+#      Events:
+#        displayCoachApi:
+#          Type: Api
+#          Properties:
+#            Path: /
+#            Method: get
 #  portalAPI:
 #    Type: AWS::Serverless::Api
 #    Properties:

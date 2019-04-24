@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Athletes to College Portal
+Globals:
+  Function:
+    Runtime: python3.7
+    Timeout: 30
+Resources:
+  loginPortalFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: login_function.lambda_handler
+      CodeUri: ./function.zip
+      Events:
+        formPortalApi:
+          Type: Api
+          Properties:
+            Path: /
+            Method: get
+        loginPortalApi:
+          Type: Api
+          Properties:
+            Path: /
+            Method: post
+  loginPortalApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
