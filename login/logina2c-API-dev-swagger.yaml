@@ -1,0 +1,43 @@
+---
+swagger: "2.0"
+info:
+  version: "2019-04-25T13:07:39Z"
+  title: "logina2c-API"
+host: "devportal.thefirmu.org"
+basePath: "/dev"
+schemes:
+- "https"
+paths:
+  /:
+    get:
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Authorization:
+              type: "string"
+            Content-type:
+              type: "string"
+    post:
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Authorization:
+              type: "string"
+            Content-Type:
+              type: "string"

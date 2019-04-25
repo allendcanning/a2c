@@ -6,6 +6,31 @@ Globals:
     Runtime: python3.7
     Timeout: 30
 Resources:
+  athleteApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      DefinitionUrl: ./athlete/a2c-API-dev-swagger.yaml
+      Auth:
+        DefaultAuthorizer: a2cCognitoAuthorizer
+        Authorizers:
+          a2cCognitoAuthorizer:
+            UserPoolArn: arn:aws:cognito-idp:us-east-1:530317771161:userpool/us-east-1_DOD7SyKZu
+  coachApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      DefinitionUrl: ./coach/coacha2c-API-dev-swagger.yaml
+      Auth:
+        DefaultAuthorizer: a2cCognitoAuthorizer
+        Authorizers:
+          a2cCognitoAuthorizer:
+            UserPoolArn: arn:aws:cognito-idp:us-east-1:530317771161:userpool/us-east-1_DOD7SyKZu
+  loginApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      DefinitionUrl: ./login/logina2c-API-dev-swagger.yaml
   displayPortalFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -17,11 +42,25 @@ Resources:
           Properties:
             Path: /
             Method: get
+            RestApiId: !Ref athleteApi
         updatePortalApi:
           Type: Api
           Properties:
             Path: /
             Method: post
+            RestApiId: !Ref athleteApi
+  coachPortalFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: coach_function.lambda_handler
+      CodeUri: ./coach/
+      Events:
+        displayCoachPortal:
+          Type: Api
+          Properties:
+            Path: /
+            Method: get
+            RestApiId: !Ref coachApi
   loginPortalFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -33,8 +72,10 @@ Resources:
           Properties:
             Path: /
             Method: get
+            RestApiId: !Ref loginApi
         loginPortalApi:
           Type: Api
           Properties:
             Path: /
             Method: post
+            RestApiId: !Ref loginApi

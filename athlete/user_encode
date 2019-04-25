@@ -1,0 +1,22 @@
+#!/usr/local/bin/python3
+
+import base64
+import argparse
+
+parser = argparse.ArgumentParser(description='Encode username')
+parser.add_argument("--username", dest="username", help="Username to encode")
+args = parser.parse_args()
+
+if args.username:
+  username = args.username
+else:
+  parser.print_help()
+  exit(1)
+
+encoded = base64.urlsafe_b64encode(bytes(username,'UTF-8'))
+
+print(encoded.decode('UTF-8'))
+
+decoded = base64.urlsafe_b64decode(encoded).decode('UTF-8')
+
+print(decoded)

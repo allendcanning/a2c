@@ -1,5 +1,6 @@
 import json
 import os, time
+import base64
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
@@ -14,7 +15,6 @@ dynamodb = boto3.resource('dynamodb')
 
 # This information needs to move to paramater store
 table_name = "user_info"
-s3_html_bucket = "a2c-html-530317771161"
 
 # Connect to dynamo db table
 t = dynamodb.Table(table_name)
@@ -22,8 +22,10 @@ t = dynamodb.Table(table_name)
 def log_error(msg):
   print(msg)
 
-def get_student_data(username):
+def get_student_data(athlete):
   user_record = {}
+
+  username = base64.urlsafe_b64decode(athlete).decode('UTF-8')
 
   log_error("Checking for user "+username)
   try:
@@ -229,35 +231,20 @@ def lambda_handler(event, context):
   # Log the event object
   log_error("Event = "+json.dumps(event))
 
-  # Get jwt token
-  if 'headers' in event:
-    if event['headers'] != None:
-      if 'Authorization' in event['headers']:
-        token = event['headers']['Authorization']
-
-  # Verify token and get username
-  if token != False:
-    username = user_lookup(token)
-  else:
-    username = False
+  # Get the environment from the context stage
+  environment = event['requestContext']['stage']
 
   # Get username from query string, for now
   if 'queryStringParameters' in event:
-    if 'username' in event['queryStringParameters']:
-      username = event['queryStringParameters']['username']
-    elif 'student' in event['queryStringParameters']:
-      student = event['queryStringParameters']['student']
+    if 'athlete' in event['queryStringParameters']:
+      athlete = event['queryStringParameters']['athlete']
 
-  student_record = get_student_data(student)
+  athlete_record = get_student_data(athlete)
+  log_error("Record = "+json.dumps(athlete_record))
 
-  css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+s3_html_bucket+'/css/a2c.css" type="text/css" />'
-  content = "<html><head><title>A2C Portal</title>\n"
-  content += css+'</head>'
-  content += "<body><h3>A2C Portal</h3>"
+  content = '<table class="topTable">\n'
 
-  content += '<table class="topTable">\n'
-
-  content += display_student_info(student_record)
+  content += display_student_info(athlete_record)
 
   # End of table body and table
   content += "</table>\n"

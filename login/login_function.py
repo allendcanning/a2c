@@ -16,12 +16,14 @@ from urllib.request import urlopen
 # Set timezone
 os.environ['TZ'] = 'US/Eastern'
 time.tzset()
-content_url="https://byh6q12oyj.execute-api.us-east-1.amazonaws.com/dev/"
 
-#s3_html_bucket = "a2c-html-530317771161"
-#cognito_pool = "us-east-1_DOD7SyKZu"
-#cognito_client_id = "2hfae0s8t0jb0gk1irv27dvsdc"
-#cognito_client_secret_hash = "k3uklqp2t5a0dsciq565bfdv1vm6vdq8uiv8n6bn3dh0d22jj3m"
+table_name = "user_info"
+
+# Open DB connection
+dynamodb = boto3.resource('dynamodb')
+
+# Connect to dynamo db table
+t = dynamodb.Table(table_name)
 
 def log_error(msg):
   print(msg)
@@ -50,10 +52,15 @@ def get_config_data(environment):
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['content_url'] =response['Parameter']['Value'] 
 
+  ssmpath="/a2c/"+environment+"/coach_url"
+  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+  config['coach_url'] =response['Parameter']['Value'] 
+
   return config
 
 def validate_token(config,token):
   region = 'us-east-1'
+  user_record = {}
   keys_url = 'https://cognito-idp.{}.amazonaws.com/{}/.well-known/jwks.json'.format(region, config['cognito_pool'])
   response = urlopen(keys_url)
   keys = json.loads(response.read())['keys']
@@ -89,6 +96,8 @@ def validate_token(config,token):
   # use the unverified claims
   claims = jwt.get_unverified_claims(token)
 
+  log_error('Token claims = '+json.dumps(claims))
+
   # additionally we can verify the token expiration
   if time.time() > claims['exp']:
       log_error('Token is expired')
@@ -97,7 +106,11 @@ def validate_token(config,token):
   if claims['aud'] != config['cognito_client_id']:
       log_error('Token claims not valid for this application')
       return False
-  return token
+  
+  user_record['username'] = claims['cognito:username']
+  user_record['token'] = token
+
+  return user_record
 
 def authenticate_user(config,authparams):
   # Get cognito handle
@@ -147,6 +160,37 @@ def set_portal_data(config,token,record):
 
   return body
 
+def get_account_type(environment,username):
+  user_record = {}
+
+  log_error("Checking for user "+username)
+  try:
+    item = t.get_item(
+      Key={ 'username': username
+          }
+      )
+    user_record = item['Item']
+    log_error("Item = "+json.dumps(user_record))
+  except ClientError as e:
+    log_error("response = "+json.dumps(e.response))
+    log_error("Error is "+e.response['Error']['Message'])
+
+  if 'username' not in user_record:
+    return False
+  else:
+    return user_record['account_type']
+
+def get_coach_view(config,token,athlete):
+  headers = { 'Authorization': token }
+
+  payload = { 'athlete': athlete }
+
+  r = requests.get(config['coach_url'],headers=headers,params=payload)
+
+  body = r.text
+
+  return body
+
 def get_portal_data(config,token,editarea):
   headers = { 'Authorization': token }
 
@@ -163,9 +207,11 @@ def get_portal_data(config,token,editarea):
   return body
 
 def lambda_handler(event, context):
-  token = False
+  token = 'False'
   editarea = False
   record = {}
+  athlete = False
+  username = ""
 
   log_error("Event = "+json.dumps(event))
 
@@ -188,8 +234,15 @@ def lambda_handler(event, context):
         token = cookie.split('=')[1]
         log_error('Got Token = '+token)
         if token != 'False':
-          token = validate_token(config,token)
+          auth_record = validate_token(config,token)
+          token = auth_record['token']
+          username = auth_record['username']
           
+  if 'queryStringParameters' in event:
+    if event['queryStringParameters'] != None:
+      if 'athlete' in event['queryStringParameters']:
+        athlete = event['queryStringParameters']['athlete']
+
   if 'body' in event:
     if event['body'] != None:
       # Parse the post parameters
@@ -220,19 +273,43 @@ def lambda_handler(event, context):
         
       if 'USERNAME' in auth:
         token = authenticate_user(config,auth)
+        username = auth['USERNAME']
         
       log_error('Got token = '+token)
-      if token != False:
-        if 'action' in record:
-          content += set_portal_data(config,token,record)
-        else:
-          content += get_portal_data(config,token,editarea)
+      if token != 'False':
+        account_type = get_account_type(environment,username)
+        if account_type == "athlete":
+          if 'action' in record:
+            content += set_portal_data(config,token,record)
+          else:
+            content += get_portal_data(config,token,editarea)
+        elif account_type == "coach":
+          content += get_coach_view(config,token,athlete)
       else:
         content += print_form()
     else:
-      content += print_form()
+      # there are no post parameters
+      if token != 'False':
+        account_type = get_account_type(environment,username)
+        log_error('Account type '+account_type)
+        if account_type == "coach":
+          if athlete != False:
+            content += get_coach_view(config,token,athlete)
+        elif account_type == "athlete":
+         content += get_portal_data(config,token,editarea)
+      else:
+        content += print_form()
   else:
-    content += print_form()
+    if token != 'False':
+      account_type = get_account_type(environment,username)
+      log_error('Account type '+account_type)
+      if account_type == "coach":
+        if athlete != False:
+          content += get_coach_view(config,token,athlete)
+     elif account_type == "athlete":
+         content += get_portal_data(config,token,editarea) 
+    else:
+      content += print_form()
 
   content += "</body></html>"
 

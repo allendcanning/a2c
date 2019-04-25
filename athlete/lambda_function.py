@@ -17,10 +17,6 @@ dynamodb = boto3.resource('dynamodb')
 
 # This information needs to move to paramater store
 table_name = "user_info"
-#s3_html_bucket = "a2c-html-530317771161"
-#cognito_pool = "us-east-1_DOD7SyKZu"
-#cognito_client_id = "2hfae0s8t0jb0gk1irv27dvsdc"
-#cognito_client_secret_hash = "k3uklqp2t5a0dsciq565bfdv1vm6vdq8uiv8n6bn3dh0d22jj3m"
 
 # Connect to dynamo db table
 t = dynamodb.Table(table_name)
@@ -119,14 +115,16 @@ def get_user_data(username):
 
   return user_record
 
-def edit_personal_info(record):
-  user_record = '<form method="post" action="">\n'
+def edit_personal_info(environment,record):
+  user_record = '<form method="post" id="Cancel" action="">\n'
+  user_record += '</form>'
+  user_record += '<form method="post" action="">\n'
   user_record += '<input type="hidden" name="action" value="Process">\n'
   #user_record += '<input type="hidden" name="username" value="'+record['username']+'">\n'
   user_record += '<input type="hidden" name="editarea" value="personal">\n'
   user_record += '<tr><td>\n'
   user_record += '  <table class="defTable">\n'
-  user_record += '    <tr><th colspan="2" class="areaHead">Personal Information:</th><th colspan="6" class="areaHead"><input type="submit" name="Submit"><input class="button" type="button" onclick="window.location.replace(\'/?username='+record['username']+'\')" value="Cancel" /></th></tr>'
+  user_record += '    <tr><th colspan="2" class="areaHead">Personal Information:</th><th colspan="6" class="areaHead"><input type="submit" name="Submit"><input class="button" type="button" onclick="document.getElementById(\"Cancel\").submit())" value="Cancel" /></th></tr>'
 
   user_record += '    <tr><td class="header">First name: </td><td class="data">'
 
@@ -210,14 +208,14 @@ def edit_personal_info(record):
   user_record += '</form>'
   return user_record
 
-def edit_academic_info(record):
+def edit_academic_info(environment,record):
   user_record = '<form method="post" action="">'
   user_record += '<input type="hidden" name="action" value="Process">\n'
   #user_record += '<input type="hidden" name="username" value="'+record['username']+'">\n'
   user_record += '<input type="hidden" name="editarea" value="academic">\n'
   user_record += '<td class="right">\n'
   user_record += '  <table class="defTable">\n'
-  user_record += '    <tr><th colspan="2" class="areaHead">Academic Information:</th><th colspan="2" class="areaHead"><input type="submit" name="Submit"><input class="button" type="button" onclick="window.location.replace(\'/?username='+record['username']+'\')" value="Cancel" /></th></tr>'
+  user_record += '    <tr><th colspan="2" class="areaHead">Academic Information:</th><th colspan="2" class="areaHead"><input type="submit" name="Submit"><input class="button" type="button" onclick="document.getElementById(\'Cancel\').submit()" value="Cancel" /></th></tr>'
 
   user_record += '    <tr><td class="header">GPA: <td class="data"><input type="text" name="gpa" value="'
   if 'gpa' in record:
@@ -264,14 +262,14 @@ def edit_academic_info(record):
 
   return user_record
 
-def edit_athletic_info(record):
+def edit_athletic_info(environment,record):
   user_record = '<form method="post" action="">'
   user_record += '<input type="hidden" name="action" value="Process">\n'
   #user_record += '<input type="hidden" name="username" value="'+record['username']+'">\n'
   user_record += '<input type="hidden" name="editarea" value="athletic">\n'
   user_record += '<tr><td colspan="2">\n'
   user_record += '  <table class="defTable">\n'
-  user_record += '    <tr><th class="areaHead">Athletic Information:</th><th class="areaHead"><input type="submit" name="Submit"><input class="button" type="button" onclick="window.location.replace(\'/?username='+record['username']+'\')" value="Cancel" /></th></tr>'
+  user_record += '    <tr><th class="areaHead">Athletic Information:</th><th class="areaHead"><input type="submit" name="Submit"><input class="button" type="button" onclick="document.getElementById(\'Cancel\').submit()" value="Cancel" /></th></tr>'
 
   user_record += '    <tr><td class="header">Sport: <td class="athletedata"><input type="text" name="sport" value="'
   if 'sport' in record:
@@ -331,7 +329,7 @@ def edit_athletic_info(record):
 
   return user_record
 
-def display_personal_info(record):
+def display_personal_info(environment,record):
   user_record = '<tr><td>\n'
   user_record += '  <table class="defTable">\n'
   user_record += '    <tr><th class="areaHead">Personal Information:</th><th class="areaHead">'
@@ -416,7 +414,7 @@ def display_personal_info(record):
   
   return user_record
 
-def display_academic_info(record):
+def display_academic_info(environment,record):
   user_record = '<td class="right">\n'
   user_record += '  <table class="defTable">\n'
   user_record += '    <tr><th class="areaHead">Academic Information:</th><th class="areaHead">'
@@ -466,7 +464,7 @@ def display_academic_info(record):
 
   return user_record
 
-def display_athletic_info(record):
+def display_athletic_info(environment,record):
   user_record = '<tr><td colspan="2">\n'
   user_record += '  <table class="defTable">\n'
   user_record += '    <tr><th class="areaHead">Athletic Information:</th><th class="areaHead">'
@@ -544,7 +542,7 @@ def lambda_handler(event, context):
   log_error("Event = "+json.dumps(event))
 
   # Get the environment from the context stage
-  #environment = event['requestContext']['stage']
+  environment = event['requestContext']['stage']
   # look up the config data using environment
   #config = get_config_data(environment)
   
@@ -592,21 +590,21 @@ def lambda_handler(event, context):
 
   # Check for editing
   if editarea == "personal":
-    content += edit_personal_info(record)
-    content += display_academic_info(record)
-    content += display_athletic_info(record)
+    content += edit_personal_info(environment,record)
+    content += display_academic_info(environment,record)
+    content += display_athletic_info(environment,record)
   elif editarea == "academic":
-    content += display_personal_info(record)
-    content += edit_academic_info(record)
-    content += display_athletic_info(record)
+    content += display_personal_info(environment,record)
+    content += edit_academic_info(environment,record)
+    content += display_athletic_info(environment,record)
   elif editarea == "athletic":
-    content += display_personal_info(record)
-    content += display_academic_info(record)
-    content += edit_athletic_info(record)
+    content += display_personal_info(environment,record)
+    content += display_academic_info(environment,record)
+    content += edit_athletic_info(environment,record)
   else:
-    content += display_personal_info(record)
-    content += display_academic_info(record)
-    content += display_athletic_info(record)
+    content += display_personal_info(environment,record)
+    content += display_academic_info(environment,record)
+    content += display_athletic_info(environment,record)
 
   # End of table body and table
   content += "</table>\n"
