@@ -39,7 +39,7 @@ Resources:
                 required: false
                 type: "string"
               responses:
-                200:
+                '200':
                   description: "200 response"
                   headers:
                     Authorization:
@@ -57,7 +57,7 @@ Resources:
                 required: false
                 type: "string"
               responses:
-                200:
+                '200':
                   description: "200 response"
                   headers:
                     Authorization:
@@ -144,7 +144,7 @@ Resources:
                 required: false
                 type: "string"
               responses:
-                200:
+                '200':
                   description: "200 response"
                   headers:
                     Authorization:
@@ -160,7 +160,7 @@ Resources:
                 required: false
                 type: "string"
               responses:
-                200:
+                '200':
                   description: "200 response"
                   headers:
                     Authorization:
