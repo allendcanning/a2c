@@ -90,7 +90,7 @@ def validate_token(config,token):
   # verify the signature
   if not public_key.verify(message.encode("utf8"), decoded_signature):
       log_error('Signature verification failed')
-      return False
+      return 'False'
 
   # since we passed the verification, we can now safely
   # use the unverified claims
@@ -101,11 +101,11 @@ def validate_token(config,token):
   # additionally we can verify the token expiration
   if time.time() > claims['exp']:
       log_error('Token is expired')
-      return False
+      return 'False'
 
   if claims['aud'] != config['cognito_client_id']:
       log_error('Token claims not valid for this application')
-      return False
+      return 'False'
   
   user_record['username'] = claims['cognito:username']
   user_record['token'] = token
@@ -132,7 +132,7 @@ def authenticate_user(config,authparams):
     log_error(json.dumps(response))
   except ClientError as e:
     log_error('Admin Initiate Auth failed: '+e.response['Error']['Message'])
-    return False
+    return 'False'
 
   return response['AuthenticationResult']['IdToken']
 

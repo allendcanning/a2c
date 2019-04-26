@@ -72,6 +72,10 @@ Resources:
             name: "Authorization"
             in: "header"
             x-amazon-apigateway-authtype: "cognito_user_pools"
+            x-amazon-apigateway-authorizer:
+              providerARNs:
+                - arn:aws:cognito-idp:us-east-1:530317771161:userpool/us-east-1_DOD7SyKZu
+              type: "cognito_user_pools"
   coachApi:
     Type: AWS::Serverless::Api
     Properties:
@@ -120,6 +124,10 @@ Resources:
             name: "Authorization"
             in: "header"
             x-amazon-apigateway-authtype: "cognito_user_pools"
+            x-amazon-apigateway-authorizer:
+              providerARNs:
+                - arn:aws:cognito-idp:us-east-1:530317771161:userpool/us-east-1_DOD7SyKZu
+              type: "cognito_user_pools"
   loginApi:
     Type: AWS::Serverless::Api
     Properties:
@@ -215,3 +223,22 @@ Resources:
             Path: /
             Method: post
             RestApiId: !Ref loginApi
+  MyCognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: "thefirmu-userpool"
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+      UsernameAttributes:
+        - email
+      Schema:
+        - AttributeDataType: String
+          Name: email
+          Required: false
+  MyCognitoUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId: !Ref MyCognitoUserPool
+      ClientName: "athlete_login"
+      GenerateSecret: true
