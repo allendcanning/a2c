@@ -1,5 +1,6 @@
 import json
 import os, time
+import re
 import base64
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
@@ -178,8 +179,8 @@ def display_student_info(record):
   user_record += '    </td></tr>\n'
 
   user_record += '    <tr><td class="header">Position: </td><td class="data">'
-  if 'position' in record:
-    user_record += record['position']
+  if 'pos' in record:
+    user_record += record['pos']
   else:
     user_record += '&nbsp;'
   user_record += '    </td></tr>\n'
@@ -213,11 +214,21 @@ def display_student_info(record):
   user_record += '    </td></tr>\n'
 
   user_record += '    <tr><td class="header">Athletic Statistics: </td><td class="data">'
-  if 'stats' in record:
-    user_record += record['stats']
+  if 'athleticstats' in record:
+    user_record += record['athleticstats'].replace('\n', '<br>')
   else:
     user_record += '&nbsp;'
   user_record += '    </td></tr>\n'
+
+  user_record += '    <tr><td class="header">Highlight Links: </td><td class="data">'
+  if 'highlights' in record:
+    highlights = record['highlights']
+    highlights = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', highlights)
+    for h in highlights:
+      user_record += '<a href="'+h+'">'+h+'</a><br>'
+  else:
+   user_record += '&nbsp;'
+  user_record += '</td></tr>\n'
   user_record += '  </table>\n'
   user_record += '</td></tr>\n'
 

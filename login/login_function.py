@@ -169,6 +169,7 @@ def get_account_type(environment,username):
       Key={ 'username': username
           }
       )
+    log_error("Item = "+json.dumps(item))
     user_record = item['Item']
     log_error("Item = "+json.dumps(user_record))
   except ClientError as e:
@@ -191,12 +192,12 @@ def get_coach_view(config,token,athlete):
 
   return body
 
-def get_portal_data(config,token,editarea):
+def get_portal_data(config,token,action):
   headers = { 'Authorization': token }
 
-  if editarea != False:
-    log_error("Calling POST with "+editarea)
-    data = "editarea="+editarea
+  if action != False:
+    log_error("Calling POST with "+action)
+    data = "action="+action
     r = requests.post(config['content_url'],headers=headers,data=data)
   else:
     log_error("Calling GET")
@@ -208,10 +209,10 @@ def get_portal_data(config,token,editarea):
 
 def lambda_handler(event, context):
   token = 'False'
-  editarea = False
   record = {}
   athlete = False
   username = ""
+  action = "display"
 
   log_error("Event = "+json.dumps(event))
 
@@ -235,8 +236,11 @@ def lambda_handler(event, context):
         log_error('Got Token = '+token)
         if token != 'False':
           auth_record = validate_token(config,token)
-          token = auth_record['token']
-          username = auth_record['username']
+          if auth_record != 'False':
+            token = auth_record['token']
+            username = auth_record['username']
+          else:
+            token = 'False'
           
   if 'queryStringParameters' in event:
     if event['queryStringParameters'] != None:
@@ -259,55 +263,40 @@ def lambda_handler(event, context):
             auth['USERNAME'] = unquote_plus(value)
           elif key == "password":
             auth['PASSWORD'] = unquote_plus(value)
-          elif key == 'editarea':
-            editarea = unquote_plus(value)
-            record[key] = editarea
           else: 
             record[key] = unquote_plus(value)
       else:
         log_error('Parsing single post param: '+postparams)
         key = postparams.split('=')[0]
         value = postparams.split('=')[1]
-        if key == 'editarea':
-          editarea = unquote_plus(value)
+        record[key] = value
         
       if 'USERNAME' in auth:
         token = authenticate_user(config,auth)
         username = auth['USERNAME']
         
+      if 'action' in record:
+        action = record['action']
+
       log_error('Got token = '+token)
       if token != 'False':
-        account_type = get_account_type(environment,username)
-        if account_type == "athlete":
-          if 'action' in record:
-            content += set_portal_data(config,token,record)
-          else:
-            content += get_portal_data(config,token,editarea)
-        elif account_type == "coach":
-          content += get_coach_view(config,token,athlete)
+        if action == 'Process':
+          log_error("Setting portal data")
+          content += set_portal_data(config,token,record)
+        else:
+          log_error("Getting portal data")
+          content += get_portal_data(config,token,action)
       else:
         content += print_form()
     else:
       # there are no post parameters
       if token != 'False':
-        account_type = get_account_type(environment,username)
-        log_error('Account type '+account_type)
-        if account_type == "coach":
-          if athlete != False:
-            content += get_coach_view(config,token,athlete)
-        elif account_type == "athlete":
-         content += get_portal_data(config,token,editarea)
+         content += get_portal_data(config,token,action)
       else:
         content += print_form()
   else:
     if token != 'False':
-      account_type = get_account_type(environment,username)
-      log_error('Account type '+account_type)
-      if account_type == "coach":
-        if athlete != False:
-          content += get_coach_view(config,token,athlete)
-     elif account_type == "athlete":
-         content += get_portal_data(config,token,editarea) 
+      content += get_portal_data(config,token,action) 
     else:
       content += print_form()
 

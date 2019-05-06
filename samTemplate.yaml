@@ -28,7 +28,7 @@ Resources:
           /:
             get:
               produces:
-              - "application/json"
+              - "text/html"
               parameters:
               - name: "username"
                 in: "query"
@@ -48,6 +48,15 @@ Resources:
                       type: "string"
               security:
               - a2c_cognito: []
+              x-amazon-apigateway-integration:
+                uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:530317771161:function:a2c/invocations"
+                responses:
+                  default:
+                    statusCode: "200"
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws_proxy"
             post:
               produces:
               - "application/json"
@@ -66,6 +75,15 @@ Resources:
                       type: "string"
               security:
               - a2c_cognito: []
+              x-amazon-apigateway-integration:
+                uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:530317771161:function:a2c/invocations"
+                responses:
+                  default:
+                    statusCode: "200"
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws_proxy"
         securityDefinitions:
           a2c_cognito:
             type: "apiKey"
@@ -118,6 +136,15 @@ Resources:
                       type: "string"
               security:
               - a2c_cognito: []
+              x-amazon-apigateway-integration:
+                uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:530317771161:function:coach-a2c/invocations"
+                responses:
+                  default:
+                    statusCode: "200"
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws_proxy"
         securityDefinitions:
           a2c_cognito:
             type: "apiKey"
@@ -159,6 +186,15 @@ Resources:
                       type: "string"
                     Content-type:
                       type: "string"
+              x-amazon-apigateway-integration:
+                uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:530317771161:function:login-a2c/invocations"
+                responses:
+                  default:
+                    statusCode: "200"
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws_proxy"
             post:
               produces:
               - "application/json"
@@ -175,6 +211,15 @@ Resources:
                       type: "string"
                     Content-Type:
                       type: "string"
+              x-amazon-apigateway-integration:
+                uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:530317771161:function:login-a2c/invocations"
+                responses:
+                  default:
+                    statusCode: "200"
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws_proxy"
   displayPortalFunction:
     Type: AWS::Serverless::Function
     Properties:
