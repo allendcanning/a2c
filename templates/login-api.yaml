@@ -1,0 +1,70 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'API gateway template for login'
+Parameters:
+Resources:
+  loginApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      DefinitionBody:
+        swagger: "2.0"
+        info:
+          version: "2019-04-25T13:07:39Z"
+          title: "logina2c-API"
+        host: "devportal.thefirmu.org"
+        basePath: "/dev"
+        schemes:
+        - "https"
+        paths:
+          /:
+            get:
+              produces:
+              - "application/json"
+              parameters:
+              - name: "Authorization"
+                in: "header"
+                required: false
+                type: "string"
+              responses:
+                '200':
+                  description: "200 response"
+                  headers:
+                    Authorization:
+                      type: "string"
+                    Content-type:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:530317771161:function:a2c-stack-loginPortalFunction-HNLJG264ZAN7/invocations"
+                responses:
+                  default:
+                    statusCode: "200"
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws_proxy"
+            post:
+              produces:
+              - "application/json"
+              parameters:
+              - name: "Authorization"
+                in: "header"
+                required: false
+                type: "string"
+              responses:
+                '200':
+                  description: "200 response"
+                  headers:
+                    Authorization:
+                      type: "string"
+                    Content-Type:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:530317771161:function:a2c-stack-loginPortalFunction-HNLJG264ZAN7/invocations"
+                responses:
+                  default:
+                    statusCode: "200"
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws_proxy"
