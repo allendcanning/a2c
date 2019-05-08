@@ -5,285 +5,59 @@ Globals:
   Function:
     Runtime: python3.7
     Timeout: 30
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Default: vpc-729d3814
+Mappings:
+  VPC2Subnet:
+    vpc-729d3814:
+      Subnets:
+        - "subnet-76ade63f"
+        - "subnet-8c44d6d7"
+        - "subnet-be65cf82"
 Resources:
-  athleteApi:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: dev
-      Auth:
-        DefaultAuthorizer: a2cCognitoAuthorizer
-        Authorizers:
-          a2cCognitoAuthorizer:
-            UserPoolArn: arn:aws:cognito-idp:us-east-1:530317771161:userpool/us-east-1_DOD7SyKZu
-      DefinitionBody:
-        swagger: "2.0"
-        info:
-          version: "2019-04-23T16:22:22Z"
-          title: "a2c-API"
-        host: "byh6q12oyj.execute-api.us-east-1.amazonaws.com"
-        basePath: "/dev"
-        schemes:
-        - "https"
-        paths:
-          /:
-            get:
-              produces:
-              - "text/html"
-              parameters:
-              - name: "username"
-                in: "query"
-                required: false
-                type: "string"
-              - name: "Authorization"
-                in: "header"
-                required: false
-                type: "string"
-              responses:
-                '200':
-                  description: "200 response"
-                  headers:
-                    Authorization:
-                      type: "string"
-                    Content-type:
-                      type: "string"
-              security:
-              - a2c_cognito: []
-              x-amazon-apigateway-integration:
-                uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:530317771161:function:a2c/invocations"
-                responses:
-                  default:
-                    statusCode: "200"
-                passthroughBehavior: "when_no_match"
-                httpMethod: "POST"
-                contentHandling: "CONVERT_TO_TEXT"
-                type: "aws_proxy"
-            post:
-              produces:
-              - "application/json"
-              parameters:
-              - name: "Authorization"
-                in: "header"
-                required: false
-                type: "string"
-              responses:
-                '200':
-                  description: "200 response"
-                  headers:
-                    Authorization:
-                      type: "string"
-                    Content-Type:
-                      type: "string"
-              security:
-              - a2c_cognito: []
-              x-amazon-apigateway-integration:
-                uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:530317771161:function:a2c/invocations"
-                responses:
-                  default:
-                    statusCode: "200"
-                passthroughBehavior: "when_no_match"
-                httpMethod: "POST"
-                contentHandling: "CONVERT_TO_TEXT"
-                type: "aws_proxy"
-        securityDefinitions:
-          a2c_cognito:
-            type: "apiKey"
-            name: "Authorization"
-            in: "header"
-            x-amazon-apigateway-authtype: "cognito_user_pools"
-            x-amazon-apigateway-authorizer:
-              providerARNs:
-                - arn:aws:cognito-idp:us-east-1:530317771161:userpool/us-east-1_DOD7SyKZu
-              type: "cognito_user_pools"
-  coachApi:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: dev
-      Auth:
-        DefaultAuthorizer: a2cCognitoAuthorizer
-        Authorizers:
-          a2cCognitoAuthorizer:
-            UserPoolArn: arn:aws:cognito-idp:us-east-1:530317771161:userpool/us-east-1_DOD7SyKZu
-      DefinitionBody:
-        swagger: "2.0"
-        info:
-          version: "2019-04-25T16:54:51Z"
-          title: "coacha2c-API"
-        host: "peq6yfpt98.execute-api.us-east-1.amazonaws.com"
-        basePath: "/dev"
-        schemes:
-        - "https"
-        paths:
-          /:
-            get:
-              produces:
-              - "application/json"
-              parameters:
-              - name: "athlete"
-                in: "query"
-                required: false
-                type: "string"
-              - name: "Authorization"
-                in: "header"
-                required: false
-                type: "string"
-              responses:
-                '200':
-                  description: "200 response"
-                  headers:
-                    Authorization:
-                      type: "string"
-                    Content-type:
-                      type: "string"
-              security:
-              - a2c_cognito: []
-              x-amazon-apigateway-integration:
-                uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:530317771161:function:coach-a2c/invocations"
-                responses:
-                  default:
-                    statusCode: "200"
-                passthroughBehavior: "when_no_match"
-                httpMethod: "POST"
-                contentHandling: "CONVERT_TO_TEXT"
-                type: "aws_proxy"
-        securityDefinitions:
-          a2c_cognito:
-            type: "apiKey"
-            name: "Authorization"
-            in: "header"
-            x-amazon-apigateway-authtype: "cognito_user_pools"
-            x-amazon-apigateway-authorizer:
-              providerARNs:
-                - arn:aws:cognito-idp:us-east-1:530317771161:userpool/us-east-1_DOD7SyKZu
-              type: "cognito_user_pools"
-  loginApi:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: dev
-      DefinitionBody:
-        swagger: "2.0"
-        info:
-          version: "2019-04-25T13:07:39Z"
-          title: "logina2c-API"
-        host: "devportal.thefirmu.org"
-        basePath: "/dev"
-        schemes:
-        - "https"
-        paths:
-          /:
-            get:
-              produces:
-              - "application/json"
-              parameters:
-              - name: "Authorization"
-                in: "header"
-                required: false
-                type: "string"
-              responses:
-                '200':
-                  description: "200 response"
-                  headers:
-                    Authorization:
-                      type: "string"
-                    Content-type:
-                      type: "string"
-              x-amazon-apigateway-integration:
-                uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:530317771161:function:login-a2c/invocations"
-                responses:
-                  default:
-                    statusCode: "200"
-                passthroughBehavior: "when_no_match"
-                httpMethod: "POST"
-                contentHandling: "CONVERT_TO_TEXT"
-                type: "aws_proxy"
-            post:
-              produces:
-              - "application/json"
-              parameters:
-              - name: "Authorization"
-                in: "header"
-                required: false
-                type: "string"
-              responses:
-                '200':
-                  description: "200 response"
-                  headers:
-                    Authorization:
-                      type: "string"
-                    Content-Type:
-                      type: "string"
-              x-amazon-apigateway-integration:
-                uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:530317771161:function:login-a2c/invocations"
-                responses:
-                  default:
-                    statusCode: "200"
-                passthroughBehavior: "when_no_match"
-                httpMethod: "POST"
-                contentHandling: "CONVERT_TO_TEXT"
-                type: "aws_proxy"
   displayPortalFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: lambda_function.lambda_handler
-      CodeUri: ./athlete/
-      Events:
-        displayPortalApi:
-          Type: Api
-          Properties:
-            Path: /
-            Method: get
-            RestApiId: !Ref athleteApi
-        updatePortalApi:
-          Type: Api
-          Properties:
-            Path: /
-            Method: post
-            RestApiId: !Ref athleteApi
-  coachPortalFunction:
-    Type: AWS::Serverless::Function
+      CodeUri: ./
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Handler: coach_function.lambda_handler
-      CodeUri: ./coach/
-      Events:
-        displayCoachPortal:
-          Type: Api
-          Properties:
-            Path: /
-            Method: get
-            RestApiId: !Ref coachApi
-  loginPortalFunction:
-    Type: AWS::Serverless::Function
+      Scheme: internet-facing 
+      Subnets: !FindInMap [VPC2Subnet, !Ref "VpcId", Subnets]
+      SecurityGroups:
+      - !Ref LoadBalancerSecurityGroup
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn: LambdaInvokePermission
     Properties:
-      Handler: login_function.lambda_handler
-      CodeUri: ./login/function.zip
-      Events:
-        formPortalApi:
-          Type: Api
-          Properties:
-            Path: /
-            Method: get
-            RestApiId: !Ref loginApi
-        loginPortalApi:
-          Type: Api
-          Properties:
-            Path: /
-            Method: post
-            RestApiId: !Ref loginApi
-#  MyCognitoUserPool:
-#    Type: AWS::Cognito::UserPool
-#    Properties:
-#      UserPoolName: "thefirmu-userpool"
-#      Policies:
-#        PasswordPolicy:
-#          MinimumLength: 8
-#      UsernameAttributes:
-#        - email
-#      Schema:
-#        - AttributeDataType: String
-#          Name: email
-#          Required: false
-#  MyCognitoUserPoolClient:
-#    Type: AWS::Cognito::UserPoolClient
-#    Properties:
-#      UserPoolId: !Ref MyCognitoUserPool
-#      ClientName: "athlete_login"
-#      GenerateSecret: true
+      TargetType: lambda
+      Targets:
+      - Id: !GetAtt displayPortalFunction.Arn
+  HttpListener:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Properties:
+      DefaultActions:
+      - TargetGroupArn: !Ref TargetGroup
+        Type: forward
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 80
+      Protocol: HTTP
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http to client host
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt displayPortalFunction.Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: elasticloadbalancing.amazonaws.com
