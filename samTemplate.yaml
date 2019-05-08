@@ -22,7 +22,7 @@ Resources:
     Properties:
       Handler: lambda_function.lambda_handler
       CodeUri: ./athlete/
-      Role: a2c-role
+      Role: arn:aws:iam::530317771161:role/a2c-role
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
