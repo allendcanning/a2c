@@ -651,21 +651,15 @@ def lambda_handler(event, context):
       if event['body'] != None:
         # Parse the post parameters
         postparams = event['body']
-        postparams = base64.b64decode(postparams)
+        postparams = str(base64.b64decode(bytes(postparams,'UTF-8')))
+        log_error('Got post params = '+postparams)
         auth = {}
-        if '&' in postparams:
-          log_error('Parsing login form')
-          for params in postparams.split('&'):
-            key = params.split('=')[0]
-            value = params.split('=')[1]
-            if key == "Submit":
-              continue
-            if key == "username":
-              auth['USERNAME'] = unquote_plus(value)
-            elif key == "password":
-              auth['PASSWORD'] = unquote_plus(value)
-            else: 
-              record[key] = unquote_plus(value)
+        log_error('Parsing login form')
+        params = urllib.parse.parse_qs(postparams)
+        if 'username' in params:
+          auth['USERNAME'] = params['username']
+        if 'password' in params:
+          auth['PASSWORD'] = params['password']
 
         if 'USERNAME' in auth:
           token = authenticate_user(config,auth)
@@ -680,13 +674,8 @@ def lambda_handler(event, context):
       if event['body'] != None:
         # Parse the post parameters
         postparams = event['body']
-        postparams = base64.b64decode(postparams)
-        for token in postparams.split('&'):
-          key = token.split('=')[0]
-          if key == "Submit":
-            continue
-          value = token.split('=')[1]
-          user_record[key] = unquote_plus(value)
+        postparams = base64.b64decode(bytes(postparams,'UTF-8'))
+        user_record = urllib.parse.parse_qs(postparams)
 
     # If we have form data, update dynamo
     if 'action' in user_record:
