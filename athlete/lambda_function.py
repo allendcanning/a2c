@@ -216,7 +216,7 @@ def edit_athlete_info(environment,record):
 
   user_record += '    <tr><td class="header">ACT: <td class="data"><input type="text" name="act" value="'
   if 'act' in record:
-    if record['act'] != None
+    if record['act'] != None:
       user_record += record['act']
   user_record += '">'
   user_record += '</td></tr>\n'
@@ -513,6 +513,119 @@ def display_athlete_info(environment,record):
 
   return user_record
 
+def start_html(config):
+  # Build HTML content
+  css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+config['s3_html_bucket']+'/css/a2c.css" type="text/css" />'
+  content = "<html><head><title>A2C Portal</title>\n"
+  content += css+'</head>'
+  content += "<body><h3>A2C Portal</h3>"
+
+  return content
+
+def validate_token(config,token):
+  region = 'us-east-1'
+  user_record = {}
+  keys_url = 'https://cognito-idp.{}.amazonaws.com/{}/.well-known/jwks.json'.format(region, config['cognito_pool'])
+  response = urlopen(keys_url)
+  keys = json.loads(response.read())['keys']
+
+  headers = jwt.get_unverified_headers(token)
+  kid = headers['kid']
+  # search for the kid in the downloaded public keys
+  key_index = -1
+  for i in range(len(keys)):
+      if kid == keys[i]['kid']:
+          key_index = i
+          break
+  if key_index == -1:
+      log_error('Public key not found in jwks.json')
+      return False
+
+  # construct the public key
+  public_key = jwk.construct(keys[key_index])
+
+  # get the last two sections of the token,
+  # message and signature (encoded in base64)
+  message, encoded_signature = str(token).rsplit('.', 1)
+
+  # decode the signature
+  decoded_signature = base64url_decode(encoded_signature.encode('utf-8'))
+
+  # verify the signature
+  if not public_key.verify(message.encode("utf8"), decoded_signature):
+      log_error('Signature verification failed')
+      return 'False'
+
+  # since we passed the verification, we can now safely
+  # use the unverified claims
+  claims = jwt.get_unverified_claims(token)
+
+  log_error('Token claims = '+json.dumps(claims))
+
+  # additionally we can verify the token expiration
+  if time.time() > claims['exp']:
+      log_error('Token is expired')
+      return 'False'
+
+  if claims['aud'] != config['cognito_client_id']:
+      log_error('Token claims not valid for this application')
+      return 'False'
+  
+  user_record['username'] = claims['cognito:username']
+  user_record['token'] = token
+
+  return user_record
+
+def authenticate_user(config,authparams):
+  # Get cognito handle
+  cognito = boto3.client('cognito-idp')
+
+  message = authparams['USERNAME'] + config['cognito_client_id']
+  dig = hmac.new(key=bytes(config['cognito_client_secret_hash'],'UTF-8'),msg=message.encode('UTF-8'),digestmod=hashlib.sha256).digest()
+
+  authparams['SECRET_HASH'] = base64.b64encode(dig).decode()
+
+  log_error('Auth record = '+json.dumps(authparams))
+
+  # Initiate Authentication
+  try:
+    response = cognito.admin_initiate_auth(UserPoolId=config['cognito_pool'],
+                                 ClientId=config['cognito_client_id'],
+                                 AuthFlow='ADMIN_NO_SRP_AUTH',
+                                 AuthParameters=authparams)
+    log_error(json.dumps(response))
+  except ClientError as e:
+    log_error('Admin Initiate Auth failed: '+e.response['Error']['Message'])
+    return 'False'
+
+  return response['AuthenticationResult']['IdToken']
+
+def check_token(event):
+  token = 'False'
+  auth_record['token'] = 'False'
+  auth_record['username'] = 'False'
+
+  # Get jwt token
+  if 'headers' in event:
+    if event['headers'] != None:
+      if 'cookie' in event['headers']:
+        cookie = event['headers']['cookie']
+        token = cookie.split('=')[1]
+        log_error('Got Token = '+token)
+        if token != 'False':
+          auth_record = validate_token(config,token)
+
+  return auth_record
+
+def print_form():
+  content = '<form method="post" action="">'
+  content += 'Enter Username: <input type="text" name="username"><p>\n'
+  content += 'Enter Password: <input type="password" name="password"><p>\n'
+  content += '<input type="submit" name="Submit">'
+  content += '</form>'
+
+  return content
+
 def lambda_handler(event, context):
   token = False
   user_record = {}
@@ -523,46 +636,79 @@ def lambda_handler(event, context):
   # Get the environment from the context stage
   environment = event['requestContext']['stage']
   # look up the config data using environment
-  #config = get_config_data(environment)
+  config = get_config_data(environment)
   
-  username = event['requestContext']['authorizer']['claims']['cognito:username']
-  user_record['username'] = username
+  content = start_html(config)
 
-  if 'body' in event:
-    if event['body'] != None:
-      # Parse the post parameters
-      postparams = event['body']
-      for token in postparams.split('&'):
-        key = token.split('=')[0]
-        if key == "Submit":
-          continue
-        value = token.split('=')[1]
-        user_record[key] = unquote_plus(value)
+  auth_record = check_token(event)
 
-  # If we have form data, update dynamo
-  if 'action' in user_record:
-    action = user_record['action']
-    if user_record['action'] == "Process":
-      del user_record['action']
-      update_user_info(user_record)
+  if auth_record['token'] == 'False':
+    # Check to see if they submitted the login form
+    if 'body' in event:
+      if event['body'] != None:
+        # Parse the post parameters
+        postparams = event['body']
+        auth = {}
+        if '&' in postparams:
+          log_error('Parsing login form')
+          for params in postparams.split('&'):
+            key = params.split('=')[0]
+            value = params.split('=')[1]
+            if key == "Submit":
+              continue
+            if key == "username":
+              auth['USERNAME'] = unquote_plus(value)
+            elif key == "password":
+              auth['PASSWORD'] = unquote_plus(value)
+            else: 
+              record[key] = unquote_plus(value)
 
-  # Get user data
-  if username != False:
-    record = get_user_data(username)
+        if 'USERNAME' in auth:
+          token = authenticate_user(config,auth)
+          username = auth['USERNAME']
+        else:
+          # got no login information, so we need to print the form
+          content += print_form()
   else:
-    record = {}
+    user_record['username'] = auth_record['username']
 
-  log_error("Record = "+json.dumps(record))
-  content = '<table class="topTable">\n'
+    if 'body' in event:
+      if event['body'] != None:
+        # Parse the post parameters
+        postparams = event['body']
+        for token in postparams.split('&'):
+          key = token.split('=')[0]
+          if key == "Submit":
+            continue
+          value = token.split('=')[1]
+          user_record[key] = unquote_plus(value)
 
-  # Check for editing
-  if action == "edit":
-    content += edit_athlete_info(environment,record)
-  else:
-    content += display_athlete_info(environment,record)
+    # If we have form data, update dynamo
+    if 'action' in user_record:
+      action = user_record['action']
+      if user_record['action'] == "Process":
+        del user_record['action']
+        update_user_info(user_record)
 
-  # End of table body and table
-  content += "</table>\n"
+    # Get user data
+    if username != False:
+      record = get_user_data(username)
+    else:
+      record = {}
+
+    log_error("Record = "+json.dumps(record))
+    content = '<table class="topTable">\n'
+
+    # Check for editing
+    if action == "edit":
+      content += edit_athlete_info(environment,record)
+    else:
+      content += display_athlete_info(environment,record)
+
+    # End of table body and table
+    content += "</table>\n"
+
+  content += "</body></html>"
 
   return { 'statusCode': 200,
            'headers': {
