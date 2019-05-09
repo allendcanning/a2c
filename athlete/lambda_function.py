@@ -5,9 +5,12 @@ import boto3
 import hmac
 import hashlib
 import base64
+from jose import jwk, jwt
+from jose.utils import base64url_decode
 from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
-from urllib.parse import unquote_plus
+import urllib.parse
+from urllib.request import urlopen
 
 # Set timezone
 os.environ['TZ'] = 'US/Eastern'
@@ -39,7 +42,7 @@ def get_config_data(environment):
 
   ssmpath="/a2c/"+environment+"/cognito_client_id"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
-  config['cognito_cognito_client_id'] =response['Parameter']['Value'] 
+  config['cognito_client_id'] =response['Parameter']['Value'] 
 
   ssmpath="/a2c/"+environment+"/cognito_client_secret_hash"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
@@ -48,6 +51,9 @@ def get_config_data(environment):
   ssmpath="/a2c/"+environment+"/content_url"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['content_url'] =response['Parameter']['Value'] 
+
+  for item in config:
+    log_error("Got config key = "+item+" value = "+config[item])
 
   return config
 
@@ -655,15 +661,29 @@ def lambda_handler(event, context):
         log_error('Got post params = '+postparams)
         auth = {}
         log_error('Parsing login form')
-        params = urllib.parse.parse_qs(postparams)
+        params = urllib.parse.parse_qsl(postparams)
+        log_error("Params = "+str(params))
         if 'username' in params:
-          auth['USERNAME'] = params['username']
+          log_error("Got username = "+params['username'][0])
+          auth['USERNAME'] = params['username'][0]
         if 'password' in params:
-          auth['PASSWORD'] = params['password']
+          log_error("Got password = "+params['password'][0])
+          auth['PASSWORD'] = params['password'][0]
 
         if 'USERNAME' in auth:
           token = authenticate_user(config,auth)
           username = auth['USERNAME']
+
+          # Get user data
+          if username != False:
+            record = get_user_data(username)
+          else:
+            record = {}
+
+          content += '<table class="topTable">\n'
+          content += display_athlete_info(environment,record)
+          # End of table body and table
+          content += "</table>\n"
         else:
           # got no login information, so we need to print the form
           content += print_form()
