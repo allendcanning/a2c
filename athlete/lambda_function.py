@@ -600,8 +600,9 @@ def authenticate_user(config,authparams):
 
   return response['AuthenticationResult']['IdToken']
 
-def check_token(event):
+def check_token(config,event):
   token = 'False'
+  auth_record = {}
   auth_record['token'] = 'False'
   auth_record['username'] = 'False'
 
@@ -610,10 +611,12 @@ def check_token(event):
     if event['headers'] != None:
       if 'cookie' in event['headers']:
         cookie = event['headers']['cookie']
-        token = cookie.split('=')[1]
-        log_error('Got Token = '+token)
-        if token != 'False':
-          auth_record = validate_token(config,token)
+        cookie_name = cookie.split('=')[0]
+        if cookie_name == 'Token':
+          token = cookie.split('=')[1]
+          log_error('Got Token = '+token)
+          if token != 'False':
+            auth_record = validate_token(config,token)
 
   return auth_record
 
@@ -634,13 +637,13 @@ def lambda_handler(event, context):
   log_error("Event = "+json.dumps(event))
 
   # Get the environment from the context stage
-  environment = event['requestContext']['stage']
+  environment = "dev"
   # look up the config data using environment
   config = get_config_data(environment)
   
   content = start_html(config)
 
-  auth_record = check_token(event)
+  auth_record = check_token(config,event)
 
   if auth_record['token'] == 'False':
     # Check to see if they submitted the login form
@@ -648,6 +651,7 @@ def lambda_handler(event, context):
       if event['body'] != None:
         # Parse the post parameters
         postparams = event['body']
+        postparams = base64.b64decode(postparams)
         auth = {}
         if '&' in postparams:
           log_error('Parsing login form')
@@ -676,6 +680,7 @@ def lambda_handler(event, context):
       if event['body'] != None:
         # Parse the post parameters
         postparams = event['body']
+        postparams = base64.b64decode(postparams)
         for token in postparams.split('&'):
           key = token.split('=')[0]
           if key == "Submit":
@@ -710,9 +715,11 @@ def lambda_handler(event, context):
 
   content += "</body></html>"
 
+  cookie = 'Token='+str(token)
   return { 'statusCode': 200,
            'headers': {
               'Content-type': 'text/html',
+              'Set-Cookie': cookie
            },
            'body': content
          }
