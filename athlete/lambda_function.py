@@ -52,9 +52,6 @@ def get_config_data(environment):
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['content_url'] =response['Parameter']['Value'] 
 
-  for item in config:
-    log_error("Got config key = "+item+" value = "+config[item])
-
   return config
 
 def update_user_info(record):
@@ -585,6 +582,7 @@ def validate_token(config,token):
 def authenticate_user(config,authparams):
   # Get cognito handle
   cognito = boto3.client('cognito-idp')
+  record = {}
 
   message = authparams['USERNAME'] + config['cognito_client_id']
   dig = hmac.new(key=bytes(config['cognito_client_secret_hash'],'UTF-8'),msg=message.encode('UTF-8'),digestmod=hashlib.sha256).digest()
@@ -600,11 +598,14 @@ def authenticate_user(config,authparams):
                                  AuthFlow='ADMIN_NO_SRP_AUTH',
                                  AuthParameters=authparams)
     log_error(json.dumps(response))
+    record['token'] = response['AuthenticationResult']['IdToken']
+    record['message'] = 'Success'
   except ClientError as e:
     log_error('Admin Initiate Auth failed: '+e.response['Error']['Message'])
-    return 'False'
+    record['token'] = 'False'
+    record['message'] = e.response['Error']['Message']
 
-  return response['AuthenticationResult']['IdToken']
+  return record
 
 def check_token(config,event):
   token = 'False'
@@ -639,11 +640,13 @@ def lambda_handler(event, context):
   token = False
   user_record = {}
   user_record['action'] = "Form"
+  action = "display"
 
   log_error("Event = "+json.dumps(event))
 
   # Get the environment from the context stage
   environment = "dev"
+
   # look up the config data using environment
   config = get_config_data(environment)
   
@@ -654,14 +657,14 @@ def lambda_handler(event, context):
   if auth_record['token'] == 'False':
     # Check to see if they submitted the login form
     if 'body' in event:
-      if event['body'] != None:
+      if bool(event['body'] and event['body'].strip()):
         # Parse the post parameters
         postparams = event['body']
-        postparams = str(base64.b64decode(bytes(postparams,'UTF-8')))
+        postparams = base64.b64decode(bytes(postparams,'UTF-8')).decode('utf-8')
         log_error('Got post params = '+postparams)
         auth = {}
         log_error('Parsing login form')
-        params = urllib.parse.parse_qsl(postparams)
+        params = urllib.parse.parse_qs(postparams)
         log_error("Params = "+str(params))
         if 'username' in params:
           log_error("Got username = "+params['username'][0])
@@ -671,31 +674,33 @@ def lambda_handler(event, context):
           auth['PASSWORD'] = params['password'][0]
 
         if 'USERNAME' in auth:
-          token = authenticate_user(config,auth)
-          username = auth['USERNAME']
-
-          # Get user data
-          if username != False:
-            record = get_user_data(username)
+          auth_record = authenticate_user(config,auth)
+          if auth_record['token'] == 'False':
+            content += '<h4>'+auth_record['message']+'</h4>'
+            content += '<p>Please authenticate again</p>'
+            content += print_form(athlete)
           else:
-            record = {}
+            record = get_user_data(username)
 
-          content += '<table class="topTable">\n'
-          content += display_athlete_info(environment,record)
-          # End of table body and table
-          content += "</table>\n"
+            content += '<table class="topTable">\n'
+            content += display_athlete_info(environment,record)
+            # End of table body and table
+            content += "</table>\n"
         else:
           # got no login information, so we need to print the form
           content += print_form()
   else:
+    token = auth_record['token']
     user_record['username'] = auth_record['username']
 
     if 'body' in event:
       if event['body'] != None:
         # Parse the post parameters
         postparams = event['body']
-        postparams = base64.b64decode(bytes(postparams,'UTF-8'))
-        user_record = urllib.parse.parse_qs(postparams)
+        postparams = base64.b64decode(bytes(postparams,'UTF-8')).decode('utf-8')
+        raw_record = urllib.parse.parse_qs(postparams)
+        for item in raw_record:
+          user_record['item'] = raw_record['item'][0]
 
     # If we have form data, update dynamo
     if 'action' in user_record:

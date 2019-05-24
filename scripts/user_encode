@@ -15,8 +15,11 @@ else:
 
 encoded = base64.urlsafe_b64encode(bytes(username,'UTF-8'))
 
-print(encoded.decode('UTF-8'))
+new_username = encoded.decode('UTF-8')
 
-decoded = base64.urlsafe_b64decode(encoded).decode('UTF-8')
+print(new_username)
+#print(encoded)
+
+decoded = base64.urlsafe_b64decode(new_username).decode('UTF-8')
 
 print(decoded)
