@@ -23,8 +23,6 @@ Resources:
       RoleName: a2c-role
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-      - !Join ['',['arn:aws:iam::',!Ref "AWS::AccountId",':policy/',!ImportValue "a2c-mgmt-stack-DynamoPolicy"]]
-      - !Join ['',['arn:aws:iam::',!Ref "AWS::AccountId",':policy/',!ImportValue "a2c-mgmt-stack-CognitoPolicy"]]
       AssumeRolePolicyDocument:
         Statement:
         -
@@ -32,6 +30,38 @@ Resources:
           Principal:
             Service: [lambda.amazonaws.com]
           Action: ['sts:AssumeRole']
+  displayPortalDynamoPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: "a2c.dynamo.allow"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        -
+          Effect: Allow
+          Action: [ "dynamodb:PutItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:Query",
+                "dynamodb:UpdateItem"
+          ]
+          Resource: !ImportValue 'a2c-mgmt-stack-DynamoDBARN'
+      Roles:
+        - !Ref "displayPortalRole"
+  displayPortalCognitoPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: "a2c.cognito.allow"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        -
+          Effect: Allow
+          Action: ['cognito-idp:AdminInitiateAuth', 'cognito-idp:AdminCreateUser']
+          Resource: !ImportValue 'a2c-mgmt-stack-CognitoPoolARN'
+      Roles:
+        - !Ref "displayPortalRole"
   displayPortalSSMPolicy:
     Type: AWS::IAM::Policy
     Properties:
