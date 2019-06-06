@@ -23,8 +23,8 @@ Resources:
       RoleName: a2c-role
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-      - !Join ['',['arn:aws:iam::',${AWS::AccountId},':policy/',!ImportValue "a2c-mgmt-stack-DynamoPolicy"]]
-      - !Join ['',['arn:aws:iam::',${AWS::AccountId},':policy/',!ImportValue "a2c-mgmt-stack-CognitoPolicy"]]
+      - !Join ['',['arn:aws:iam::',!Ref "AWS::AccountId",':policy/',!ImportValue "a2c-mgmt-stack-DynamoPolicy"]]
+      - !Join ['',['arn:aws:iam::',!Ref "AWS::AccountId",':policy/',!ImportValue "a2c-mgmt-stack-CognitoPolicy"]]
       AssumeRolePolicyDocument:
         Statement:
         -
