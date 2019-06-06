@@ -19,12 +19,6 @@ time.tzset()
 # Open DB connection
 dynamodb = boto3.resource('dynamodb')
 
-# This information needs to move to paramater store
-table_name = "user_info"
-
-# Connect to dynamo db table
-t = dynamodb.Table(table_name)
-
 def log_error(msg):
   print(msg)
 
@@ -48,6 +42,10 @@ def get_config_data(environment):
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['cognito_client_secret_hash'] =response['Parameter']['Value'] 
 
+  ssmpath="/a2c/"+environment+"/table_name"
+  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+  config['table_name'] =response['Parameter']['Value'] 
+
   ssmpath="/a2c/"+environment+"/content_url"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['content_url'] =response['Parameter']['Value'] 
@@ -57,7 +55,9 @@ def get_config_data(environment):
 
   return config
 
-def update_user_info(record):
+def update_user_info(config,record):
+  t = dynamodb.Table(config['table_name'])
+
   # Add some error handling
   try:
     for item in record:
@@ -70,7 +70,9 @@ def update_user_info(record):
   
   return False
 
-def get_user_data(username):
+def get_user_data(config,username):
+  t.dynamodb.Table(config['table_name'])
+
   user_record = {}
 
   log_error("Checking for user "+username)
