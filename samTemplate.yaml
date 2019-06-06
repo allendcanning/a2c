@@ -32,7 +32,7 @@ Resources:
           Principal:
             Service: [lambda.amazonaws.com]
           Action: ['sts:AssumeRole']
-  mgmtPortalSSMPolicy:
+  displayPortalSSMPolicy:
     Type: AWS::IAM::Policy
     Properties:
       PolicyName: "a2c.ssm.allow"
