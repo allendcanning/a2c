@@ -19,7 +19,6 @@ def get_client_secret(session,pool,id):
   environment = "dev"
 
   ssmpath="/a2c/"+environment+"/"+id+"_cognito_client_id"
-  print(ssmpath)
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   clientid = response['Parameter']['Value']
 
@@ -42,7 +41,7 @@ def put_ssm_value(session,ssmpath,ssmval):
     client = session.client('ssm')
 
     try:
-      response = client.put_parameter(Name=ssmpath,Value=ssmval,Type='String')
+      response = client.put_parameter(Name=ssmpath,Value=ssmval,Type='String',Overwrite=True)
       return True
     except ClientError as e:
       log_error("response = "+json.dumps(e.response))
@@ -83,8 +82,8 @@ if not options.ssmpath:
 
 secret = get_client_secret(session,options.pool,options.client)
 if secret:
-  ret = put_ssm_value(Session,options.ssmpath,secret)
+  ret = put_ssm_value(session,options.ssmpath,secret)
   if ret:
-      print("Added ssm value to path ["+options.ssmpath)
+      print("Added ssm value to path ["+options.ssmpath+"]")
 else:
   log_error("Unable to find secret for client ["+options.client+"] within Pool ["+options.pool+"]")
