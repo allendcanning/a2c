@@ -87,7 +87,7 @@ Resources:
   cognitoClientIdSSM:
     Type: AWS::SSM::Parameter
     Properties: 
-      Name: /a2c/dev/cognito_client_id
+      Name: /a2c/dev/athlete_cognito_client_id
       Type: String
       Value: !Ref theFirmuCognitoClient
   displayPortalFunction:
