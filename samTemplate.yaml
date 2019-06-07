@@ -139,12 +139,16 @@ Resources:
   LoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Allow http to client host
+      GroupDescription: Allow http(s) to client host
       VpcId: !Ref VpcId
       SecurityGroupIngress:
       - IpProtocol: tcp
         FromPort: 80
         ToPort: 80
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 443
+        ToPort: 443
         CidrIp: 0.0.0.0/0
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission
