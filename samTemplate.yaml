@@ -84,6 +84,12 @@ Resources:
       GenerateSecret: True
       RefreshTokenValidity: 30
       UserPoolId: !ImportValue 'a2c-mgmt-stack-CognitoPoolId'
+  cognitoClientIdSSM:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Name: /a2c/dev/cognito_client_id
+      Type: String
+      Value: !Ref theFirmuCognitoClient
   displayPortalFunction:
     Type: AWS::Serverless::Function
     Properties:
