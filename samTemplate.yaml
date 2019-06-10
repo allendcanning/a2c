@@ -148,7 +148,8 @@ Resources:
           Order: 1
       Conditions: 
         - Field: path-pattern
-          Values: "*"
+          Values: 
+            - "*"
       ListenerArn: !Ref HttpsListener
       Priority: 1
   Priority: Integer
