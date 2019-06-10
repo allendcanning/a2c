@@ -136,6 +136,22 @@ Resources:
       LoadBalancerArn: !Ref LoadBalancer
       Port: 80
       Protocol: HTTP
+  CognitoListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties: 
+      Actions: 
+        - AuthenticateCognitoConfig:
+            UserPoolArn: !ImportValue 'a2c-mgmt-stack-CognitoPoolARN'
+            UserPoolClientId: !Ref theFirmuCognitoClient
+            UserPoolDomain: "thefirmu"
+          Type: authenticate-cognito
+          Order: 1
+      Conditions: 
+        - Field: path-pattern
+          Values: "*"
+      ListenerArn: !Ref HttpsListener
+      Priority: 1
+  Priority: Integer
   LoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
