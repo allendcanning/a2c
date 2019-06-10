@@ -150,7 +150,6 @@ Resources:
           Values: [ "/" ]
       ListenerArn: !Ref HttpsListener
       Priority: 1
-  Priority: Integer
   LoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
