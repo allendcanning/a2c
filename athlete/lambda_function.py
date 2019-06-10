@@ -636,15 +636,10 @@ def check_token(config,event):
   # Get jwt token
   if 'headers' in event:
     if event['headers'] != None:
-      if 'cookie' in event['headers']:
-        cookie = event['headers']['cookie']
-        if ';' in cookie:
-          cookies = cookie.split(';')
-          if 'AWSELBAuthSessionCookie-0' in cookies:
-            token = cookies['AWSELBAuthSessionCookie-0'].split('=')[1]
+      if 'x-amzn-oidc-accesstoken' in event['headers']:
+            token = event['headers']['x-amzn-oidc-accesstoken']
             log_error('Got Token = '+token)
-            if token != 'False':
-              auth_record = validate_token(config,token)
+            auth_record = validate_token(config,token)
 
   return auth_record
 
