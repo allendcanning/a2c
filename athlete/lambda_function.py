@@ -75,7 +75,7 @@ def update_user_info(config,record):
   return False
 
 def get_user_data(config,username):
-  t.dynamodb.Table(config['table_name'])
+  t = dynamodb.Table(config['table_name'])
 
   user_record = {}
 
