@@ -645,6 +645,10 @@ def check_token(config,event):
             log_error('Got Token = '+token)
             if token != 'False':
               auth_record = validate_token(config,token)
+      elif 'x-amzn-oidc-accesstoken' in event['headers']:
+        token = event['headers']['x-amzn-oidc-accesstoken']
+        log_error('Got Token = '+token) 
+        auth_record = validate_token(config,token)
 
   return auth_record
 
