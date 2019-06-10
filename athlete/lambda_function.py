@@ -711,11 +711,11 @@ def lambda_handler(event, context):
       action = user_record['action']
       if user_record['action'] == "Process":
         del user_record['action']
-        update_user_info(user_record)
+        update_user_info(config,user_record)
 
     # Get user data
     if username != False:
-      record = get_user_data(username)
+      record = get_user_data(config,username)
     else:
       record = {}
 
