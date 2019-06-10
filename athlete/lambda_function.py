@@ -579,11 +579,11 @@ def validate_token(config,token):
       log_error('Token is expired')
       return 'False'
 
-  if claims['aud'] != config['cognito_client_id']:
+  if claims['client_id'] != config['cognito_client_id']:
       log_error('Token claims not valid for this application')
       return 'False'
   
-  user_record['username'] = claims['cognito:username']
+  user_record['username'] = claims['username']
   user_record['token'] = token
 
   return user_record
