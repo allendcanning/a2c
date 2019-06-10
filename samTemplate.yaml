@@ -140,16 +140,14 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     Properties: 
       Actions: 
-        - AuthenticateCognitoConfig:
+        - Type: authenticate-cognito
+          AuthenticateCognitoConfig:
             UserPoolArn: !ImportValue 'a2c-mgmt-stack-CognitoPoolARN'
             UserPoolClientId: !Ref theFirmuCognitoClient
             UserPoolDomain: "thefirmu"
-          Type: authenticate-cognito
-          Order: 1
       Conditions: 
         - Field: path-pattern
-          Values: 
-            - "/"
+          Values: [ "/" ]
       ListenerArn: !Ref HttpsListener
       Priority: 1
   Priority: Integer
