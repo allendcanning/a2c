@@ -145,8 +145,10 @@ Resources:
             UserPoolArn: !ImportValue 'a2c-mgmt-stack-CognitoPoolARN'
             UserPoolClientId: !Ref theFirmuCognitoClient
             UserPoolDomain: "thefirmu"
+          Order: 1
         - Type: forward
           TargetGroupArn: !Ref TargetGroup
+          Order: 2
       Conditions: 
         - Field: path-pattern
           Values: [ "/" ]
