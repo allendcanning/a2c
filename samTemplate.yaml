@@ -145,22 +145,13 @@ Resources:
             UserPoolArn: !ImportValue 'a2c-mgmt-stack-CognitoPoolARN'
             UserPoolClientId: !Ref theFirmuCognitoClient
             UserPoolDomain: "thefirmu"
-      Conditions: 
-        - Field: path-pattern
-          Values: [ "/" ]
-      ListenerArn: !Ref HttpsListener
-      Priority: 1
-  DefaultListenerRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties: 
-      Actions: 
         - Type: forward
           TargetGroupArn: !Ref TargetGroup
       Conditions: 
         - Field: path-pattern
           Values: [ "/" ]
       ListenerArn: !Ref HttpsListener
-      Priority: 2
+      Priority: 1
   LoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
