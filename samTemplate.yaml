@@ -149,7 +149,7 @@ Resources:
       Conditions: 
         - Field: path-pattern
           Values: 
-            - "*"
+            - "/"
       ListenerArn: !Ref HttpsListener
       Priority: 1
   Priority: Integer
