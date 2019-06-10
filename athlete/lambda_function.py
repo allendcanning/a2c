@@ -703,8 +703,9 @@ def lambda_handler(event, context):
         postparams = event['body']
         postparams = base64.b64decode(bytes(postparams,'UTF-8')).decode('utf-8')
         raw_record = urllib.parse.parse_qs(postparams)
+        log_error('Raw Record = '+str(raw_record))
         for item in raw_record:
-          user_record['item'] = raw_record['item'][0]
+          user_record[item] = raw_record[item][0]
 
     # If we have form data, update dynamo
     if 'action' in user_record:
