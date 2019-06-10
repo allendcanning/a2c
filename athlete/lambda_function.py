@@ -720,6 +720,8 @@ def lambda_handler(event, context):
       record = {}
 
     log_error("Record = "+json.dumps(record))
+
+    content = start_html(config)
     content = '<table class="topTable">\n'
 
     # Check for editing
@@ -730,10 +732,8 @@ def lambda_handler(event, context):
 
     # End of table body and table
     content += "</table>\n"
+    content += "</body></html>"
 
-  content = start_html(config)
-
-  content += "</body></html>"
 
   return { 'statusCode': 200,
            'headers': {
