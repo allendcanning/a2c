@@ -46,6 +46,10 @@ def get_config_data(environment):
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['table_name'] =response['Parameter']['Value'] 
 
+  ssmpath="/a2c/"+environment+"/cognito_auth_url"
+  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+  config['cognito_auth_url'] =response['Parameter']['Value'] 
+
   ssmpath="/a2c/"+environment+"/content_url"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['content_url'] =response['Parameter']['Value'] 
@@ -608,6 +612,21 @@ def authenticate_user(config,authparams):
 
   return response['AuthenticationResult']['IdToken']
 
+def getTokenFromOauthCode(config,code,redirect_uri):
+  auth_header = base64.b64encode(bytes(config['athlete_cognito_client_id']+':'+config['athlete_cognito_client_secret_hash'],'UTF-8'))
+  data = {
+    "grant_type": "authorization_code",
+    "code": code,
+    "client_id": config['athlete_cognito_client_id'],
+    "redirect_uri": redirect_uri
+  }
+  r = requests.post(config['cognito_auth_url']+'token',auth=auth_header,data=data)
+
+  res = r.json()
+
+  return res['id_token']
+
+
 def check_token(config,event):
   token = 'False'
   auth_record = {}
@@ -650,48 +669,24 @@ def lambda_handler(event, context):
   # look up the config data using environment
   config = get_config_data(environment)
   
-  content = start_html(config)
-
+  # Check for token
   auth_record = check_token(config,event)
 
   if auth_record['token'] == 'False':
-    # Check to see if they submitted the login form
-    if 'body' in event:
-      if event['body'] != None:
-        # Parse the post parameters
-        postparams = event['body']
-        postparams = base64.b64decode(bytes(postparams,'UTF-8')).decode('utf-8')
-        log_error('Got post params = '+postparams)
-        auth = {}
-        log_error('Parsing login form')
-        params = urllib.parse.parse_qs(postparams)
-        log_error("Params = "+str(params))
-        if 'username' in params:
-          log_error("Got username = "+params['username'][0])
-          auth['USERNAME'] = params['username'][0]
-        if 'password' in params:
-          log_error("Got password = "+params['password'][0])
-          auth['PASSWORD'] = params['password'][0]
-
-        if 'USERNAME' in auth:
-          token = authenticate_user(config,auth)
-          username = auth['USERNAME']
-
-          # Get user data
-          if username != False:
-            record = get_user_data(username)
-          else:
-            record = {}
-
-          content += '<table class="topTable">\n'
-          content += display_athlete_info(environment,record)
-          # End of table body and table
-          content += "</table>\n"
+    if 'queryStringParameters' in event:
+      if event['queryStringParameters'] != None:
+        if 'code' in event['queryStringParameters']:
+          token = getTokenFromOauthCode(code)
+          log_error("Token = ",token)
         else:
-          # got no login information, so we need to print the form
-          content += print_form()
-    else:
-      content += print_form()
+          # Redirect to oauth login form
+          url = config['cognito_auth_url']+"authorize?response_type=code&client_id="+config['cognito_client_id']+"&redirect_uri="+config['content_url']
+
+          return { 'statusCode': 301,
+           'headers': {
+              'Location': url,
+           }
+          }
   else:
     token = auth_record['token']
     user_record['username'] = auth_record['username']
@@ -730,6 +725,8 @@ def lambda_handler(event, context):
 
     # End of table body and table
     content += "</table>\n"
+
+  content = start_html(config)
 
   content += "</body></html>"
 
