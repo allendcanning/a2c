@@ -722,7 +722,7 @@ def lambda_handler(event, context):
     log_error("Record = "+json.dumps(record))
 
     content = start_html(config)
-    content = '<table class="topTable">\n'
+    content += '<table class="topTable">\n'
 
     # Check for editing
     if action == "edit":
