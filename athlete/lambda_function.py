@@ -638,12 +638,13 @@ def check_token(config,event):
     if event['headers'] != None:
       if 'cookie' in event['headers']:
         cookie = event['headers']['cookie']
-        cookie_name = cookie.split('=')[0]
-        if cookie_name == 'Token':
-          token = cookie.split('=')[1]
-          log_error('Got Token = '+token)
-          if token != 'False':
-            auth_record = validate_token(config,token)
+        if ';' in cookie:
+          cookies = cookie.split(';')
+          if 'AWSELBAuthSessionCookie-0' in cookies:
+            token = cookies['AWSELBAuthSessionCookie-0'].split('=')[1]
+            log_error('Got Token = '+token)
+            if token != 'False':
+              auth_record = validate_token(config,token)
 
   return auth_record
 
@@ -730,11 +731,9 @@ def lambda_handler(event, context):
 
   content += "</body></html>"
 
-  cookie = 'Token='+str(token)
   return { 'statusCode': 200,
            'headers': {
               'Content-type': 'text/html',
-              'Set-Cookie': cookie
            },
            'body': content
          }
