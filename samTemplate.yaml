@@ -174,3 +174,9 @@ Resources:
       FunctionName: !GetAtt displayPortalFunction.Arn
       Action: 'lambda:InvokeFunction'
       Principal: elasticloadbalancing.amazonaws.com
+Outputs:
+  LoadBalancerDns:
+    Description: DNS entry for Load Balancer
+    Value: !GetAtt ["LoadBalancer","DNSName"]
+    Export:
+      Name: !Sub "${AWS::StackName}-LBDnsName"

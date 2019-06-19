@@ -49,7 +49,7 @@ def get_config_data(environment):
   ssmpath="/a2c/"+environment+"/cognito_auth_url"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['cognito_auth_url'] =response['Parameter']['Value'] 
-
+  
   ssmpath="/a2c/"+environment+"/content_url"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['content_url'] =response['Parameter']['Value'] 
@@ -651,15 +651,6 @@ def check_token(config,event):
         auth_record = validate_token(config,token)
 
   return auth_record
-
-def print_form():
-  content = '<form method="post" action="">'
-  content += 'Enter Username: <input type="text" name="username"><p>\n'
-  content += 'Enter Password: <input type="password" name="password"><p>\n'
-  content += '<input type="submit" name="Submit">'
-  content += '</form>'
-
-  return content
 
 def lambda_handler(event, context):
   token = False
