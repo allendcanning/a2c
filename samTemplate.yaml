@@ -282,7 +282,7 @@ Resources:
     Properties:
       Name: /a2c/dev/content_url
       Type: String
-      Value: !Join ['',[!Ref ContentUrl,'/']]`
+      Value: !Join ['',[!Ref ContentUrl,'/']]
   displayPortalFunction:
     Type: AWS::Serverless::Function
     Properties:
