@@ -528,9 +528,9 @@ def display_athlete_info(environment,record):
 def start_html(config):
   # Build HTML content
   css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+config['s3_html_bucket']+'/css/a2c.css" type="text/css" />'
-  content = "<html><head><title>A2C Portal</title>\n"
+  content = "<html><head><title>The Firmu Client Portal</title>\n"
   content += css+'</head>'
-  content += "<body><h3>A2C Portal</h3>"
+  content += '<body><h3 class="title" align="center">The Firmu Client Portal</h3>'
 
   return content
 
@@ -681,6 +681,7 @@ def lambda_handler(event, context):
           return { 'statusCode': 301,
            'headers': {
               'Location': url,
+              'Cache-Control': 'no-store'
            }
           }
   else:
@@ -730,6 +731,7 @@ def lambda_handler(event, context):
   return { 'statusCode': 200,
            'headers': {
               'Content-type': 'text/html',
+              'Cache-Control': 'no-store'
            },
            'body': content
          }

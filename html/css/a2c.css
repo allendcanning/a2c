@@ -35,15 +35,22 @@
 }
 .defTable {
   width: 100%;
-  border: 1px solid #999999;
+  // border: 1px solid #999999;
 }
 .areaHead {
-  background-color: #CCC;
+  background-color: #2b1d00;
   text-align: left;
+  color: #cccccc;
 }
 .header {
-  background-color: #EEE;
+  background-color: #1d2300;
   font-weight: bold;
+  color: #e8e8e8;
+}
+.title {
+  background-color: #2b1d00;
+  font-weight: bold;
+  color: #cccccc;
 }
 .data {
   border: 1px solid #999999;
