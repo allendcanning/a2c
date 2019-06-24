@@ -75,6 +75,21 @@ Resources:
     Properties:
       ServiceToken: !ImportValue 'a2c-mgmt-stack-CognitoClientSettingsLambda'
       UserPoolId: !Ref theFirmuCognitoPool
+      UserPoolClientId: !Ref theFirmuCognitoClient
+      SupportedIdentityProviders:
+        - COGNITO
+      CallbackURL: !Join ['',[!Ref ContentUrl,',https://',!GetAtt ['LoadBalancer','DNSName'],'/oauth2/idpresponse,',!Ref ContentUrl,'/oauth2/idpresponse,https://',!GetAtt ['LoadBalancer','DNSName']]]
+      LogoutURL: !Ref ContentUrl
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthFlows:
+        - code
+      AllowedOAuthScopes:
+        - openid
+  theFirmuMgmtCognitoClientSettings:
+    Type: 'Custom::CognitoUserPoolClientSettings'
+    Properties:
+      ServiceToken: !ImportValue 'a2c-mgmt-stack-CognitoClientSettingsLambda'
+      UserPoolId: !Ref theFirmuCognitoPool
       UserPoolClientId: !Ref theFirmuMgmtCognitoClient
       SupportedIdentityProviders:
         - COGNITO
