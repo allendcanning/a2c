@@ -240,7 +240,7 @@ Resources:
       Actions: 
         - Type: authenticate-cognito
           AuthenticateCognitoConfig:
-            UserPoolArn: !Ref theFirmuCognitoPool
+            UserPoolArn: !GetAtt theFirmuCognitoPool.Arn
             UserPoolClientId: !Ref theFirmuCognitoClient
             UserPoolDomain: "thefirmu"
           Order: 1
