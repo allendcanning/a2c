@@ -727,11 +727,10 @@ def lambda_handler(event, context):
     content += "</table>\n"
     content += "</body></html>"
 
-
   return { 'statusCode': 200,
            'headers': {
               'Content-type': 'text/html',
-              'Cache-Control': 'no-store'
+              'Cache-Control': 'no-store, must-revalidate',
            },
            'body': content
          }
