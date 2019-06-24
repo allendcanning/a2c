@@ -188,13 +188,13 @@ Resources:
       Name: /a2c/dev/cognito_pool
       Type: String
       Value: !Ref theFirmuCognitoPool
-  cognitoClientIdSSM:
+  cognitoAthleteClientIdSSM:
     Type: AWS::SSM::Parameter
     Properties: 
       Name: /a2c/dev/athlete_cognito_client_id
       Type: String
       Value: !Ref theFirmuCognitoClient
-  cognitoClientIdSSM:
+  cognitoMgmtClientIdSSM:
     Type: AWS::SSM::Parameter
     Properties: 
       Name: /a2c/dev/mgmt_cognito_client_id
