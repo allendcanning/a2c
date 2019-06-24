@@ -78,7 +78,11 @@ Resources:
       UserPoolClientId: !Ref theFirmuCognitoClient
       SupportedIdentityProviders:
         - COGNITO
-      CallbackURL: !Join ['',[!Ref ContentUrl,',https://',!GetAtt ['LoadBalancer','DNSName'],'/oauth2/idpresponse,',!Ref ContentUrl,'/oauth2/idpresponse,https://',!GetAtt ['LoadBalancer','DNSName']]]
+      CallbackURL:
+        - !Join ['',['https://',!GetAtt ['LoadBalancer','DNSName'],'/oauth2/idpresponse']]
+        - !Join ['',[!Ref ContentUrl,'/oauth2/idpresponse']]
+        - !Join ['',['https://',!GetAtt ['LoadBalancer','DNSName']]]
+        - !Ref ContentUrl
       LogoutURL: !Ref ContentUrl
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthFlows:
@@ -93,7 +97,11 @@ Resources:
       UserPoolClientId: !Ref theFirmuMgmtCognitoClient
       SupportedIdentityProviders:
         - COGNITO
-      CallbackURL: !Join ['',[!Ref ContentUrl,',https://',!GetAtt ['LoadBalancer','DNSName'],'/oauth2/idpresponse,',!Ref ContentUrl,'/oauth2/idpresponse,https://',!GetAtt ['LoadBalancer','DNSName']]]
+      CallbackURL:
+        - !Join ['',['https://',!GetAtt ['LoadBalancer','DNSName'],'/oauth2/idpresponse']]
+        - !Join ['',[!Ref ContentUrl,'/oauth2/idpresponse']]
+        - !Join ['',['https://',!GetAtt ['LoadBalancer','DNSName']]]
+        - !Ref ContentUrl
       LogoutURL: !Ref ContentUrl
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthFlows:
