@@ -236,6 +236,9 @@ Resources:
       ListenerArn: !Ref HttpsListener
   CognitoListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn: 
+      - theFirmuDomain
+      - theFirmuCognitoClientSettings
     Properties: 
       Actions: 
         - Type: authenticate-cognito
