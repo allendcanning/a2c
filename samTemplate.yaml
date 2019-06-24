@@ -268,6 +268,16 @@ Resources:
       FunctionName: !GetAtt displayPortalFunction.Arn
       Action: 'lambda:InvokeFunction'
       Principal: elasticloadbalancing.amazonaws.com
+  dnsEntry:
+    Type: AWS::Route53::RecordSet
+    Properties: 
+      Comment: DNS record for ALB
+      HostedZoneName: thefirmu.org.
+      Name: devportal.thefirmu.org
+      ResourceRecords: 
+        - !GetAtt LoadBalancer.DNSName
+      TTL: 300
+      Type: CNAME
 Outputs:
   LoadBalancerDns:
     Description: DNS entry for Load Balancer
