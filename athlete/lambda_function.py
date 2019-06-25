@@ -103,7 +103,7 @@ def edit_athlete_info(environment,record):
   user_record += '<input type="hidden" name="action" value="Process">\n'
   user_record += '<tr><td>\n'
   user_record += '  <table class="defTable">\n'
-  user_record += '    <tr><th colspan="2" class="areaHead">Personal Information:</th><th colspan="6" class="areaHead"><input type="submit" name="Submit"><input class="button" type="button" onclick="document.getElementById(\'Cancel\').submit()" value="Cancel" /></th></tr>'
+  user_record += '    <tr><th colspan="2" class="areaHead">Personal Information:</th><th colspan="6" class="areaHead"><input class="button" type="submit" name="Submit"><input class="button" type="button" onclick="document.getElementById(\'Cancel\').submit()" value="Cancel" /></th></tr>'
 
   user_record += '    <tr><td class="header">First name: </td><td class="data">'
 
@@ -199,7 +199,7 @@ def edit_athlete_info(environment,record):
   # Edit academic info
   user_record += '<td class="right">\n'
   user_record += '  <table class="defTable">\n'
-  user_record += '    <tr><th colspan="2" class="areaHead">Academic Information:</th><th colspan="2" class="areaHead"><input type="submit" name="Submit"><input class="button" type="button" onclick="document.getElementById(\'Cancel\').submit()" value="Cancel" /></th></tr>'
+  user_record += '    <tr><th colspan="2" class="areaHead">Academic Information:</th><th colspan="2" class="areaHead"><input class="button" type="submit" name="Submit"><input class="button" type="button" onclick="document.getElementById(\'Cancel\').submit()" value="Cancel" /></th></tr>'
 
   user_record += '    <tr><td class="header">GPA: <td class="data"><input type="text" name="gpa" value="'
   if 'gpa' in record:
@@ -252,7 +252,7 @@ def edit_athlete_info(environment,record):
   # Edit athletic information
   user_record += '<tr><td colspan="2">\n'
   user_record += '  <table class="defTable">\n'
-  user_record += '    <tr><th class="areaHead">Athletic Information:</th><th class="areaHead"><input type="submit" name="Submit"><input class="button" type="button" onclick="document.getElementById(\'Cancel\').submit()" value="Cancel" /></th></tr>'
+  user_record += '    <tr><th class="areaHead">Athletic Information:</th><th class="areaHead"><input class="button" type="submit" name="Submit"><input class="button" type="button" onclick="document.getElementById(\'Cancel\').submit()" value="Cancel" /></th></tr>'
 
   user_record += '    <tr><td class="header">Sport: <td class="athletedata"><input type="text" name="sport" value="'
   if 'sport' in record:
