@@ -1,3 +1,9 @@
+body {
+  background: #DDE8DD;
+}
+table {
+  width: 95%;
+}
 /* DivTable.com */
 .divTable{
 	display: table;
@@ -43,9 +49,9 @@
   color: #cccccc;
 }
 .header {
-  background-color: #1d2300;
+  // background-color: #1d2300;
   font-weight: bold;
-  color: #e8e8e8;
+  //color: #e8e8e8;
 }
 .title {
   background-color: #2b1d00;
@@ -71,4 +77,15 @@
 .athleticstats {
   rows: 5;
   columns: 40;
+}
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  border-radius: 4px;
+  padding: 15px px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
 }

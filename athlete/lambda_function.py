@@ -327,7 +327,7 @@ def display_athlete_info(environment,record):
   user_record += '    <tr><th class="areaHead">Personal Information:</th><th class="areaHead">'
   user_record += '<form method="post" action="">'
   user_record += '<input type="hidden" name="action" value="edit">'
-  user_record += '<input type="submit" value="Edit">'
+  user_record += '<input class="button" type="submit" value="Edit">'
   user_record += '</form></th></tr>\n'
 
   user_record += '    <tr><td class="header">Name: </td><td class="data">'
@@ -410,7 +410,7 @@ def display_athlete_info(environment,record):
   user_record += '    <tr><th class="areaHead">Academic Information:</th><th class="areaHead">'
   user_record += '<form method="post" action="">'
   user_record += '<input type="hidden" name="action" value="edit">'
-  user_record += '<input type="submit" value="Edit">'
+  user_record += '<input class="button" type="submit" value="Edit">'
   user_record += '</form></th></tr>\n'
 
   user_record += '    <tr><td class="header">GPA: </td><td class="data">'
@@ -459,7 +459,7 @@ def display_athlete_info(environment,record):
   user_record += '    <tr><th class="areaHead">Athletic Information:</th><th class="areaHead">'
   user_record += '<form method="post" action="">'
   user_record += '<input type="hidden" name="action" value="edit">'
-  user_record += '<input type="submit" value="Edit">'
+  user_record += '<input class="button" type="submit" value="Edit">'
   user_record += '</form></th></tr>\n'
 
   user_record += '    <tr><td class="header">Sport: </td><td class="data">'
