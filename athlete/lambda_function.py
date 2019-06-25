@@ -122,7 +122,7 @@ def edit_athlete_info(environment,record):
   user_record += '</td>'
   user_record += '</tr>\n'
 
-  user_record += '    <tr><td class="header">Email: <td class="data"><input type="email" name="email" value="'
+  user_record += '    <tr><td class="header">Email: <td class="data"><input type="email" name="email" size="40" value="'
   if 'email' in record:
     if record['email'] != None:
       user_record += record['email']
@@ -130,7 +130,7 @@ def edit_athlete_info(environment,record):
   user_record += '</td>'
   user_record += '</tr>\n'
 
-  user_record += '    <tr><td class="header">Phone: <td class="data"><input type="text" name="phone" value="'
+  user_record += '    <tr><td class="header">Phone: <td class="data"><input type="text" name="phone" size="10" maxlength="10" value="'
   if 'phone' in record:
     if record['phone'] != None:
       user_record += record['phone']
@@ -138,7 +138,7 @@ def edit_athlete_info(environment,record):
   user_record += '</td>'
   user_record += '</tr>\n'
 
-  user_record += '    <tr><td class="header">Address: <td class="data"><input type="text" name="address" value="'
+  user_record += '    <tr><td class="header">Address: <td class="data"><input type="text" name="address" size="40" value="'
   if 'address' in record:
     if record['address'] != None:
       user_record += record['address']
@@ -152,14 +152,14 @@ def edit_athlete_info(environment,record):
   user_record += '">'
   user_record += '</td>'
 
-  user_record += '      <td class="header">State: <td class="data"><input type="text" name="st" value="'
+  user_record += '      <td class="header">State: <td class="data"><input type="text" name="st" size="2" maxlength="2" value="'
   if 'st' in record:
     if record['st'] != None:
       user_record += record['st']
   user_record += '">'
   user_record += '</td>'
 
-  user_record += '      <td class="header">Zip: <td class="data"><input type="text" name="zip" value="'
+  user_record += '      <td class="header">Zip: <td class="data"><input type="text" name="zip" size="5" maxlength="5" value="'
   if 'zip' in record:
     if record['zip'] != None:
       user_record += record['zip']
@@ -180,14 +180,14 @@ def edit_athlete_info(environment,record):
   user_record += '">'
   user_record += '</td></tr>\n'
 
-  user_record += '    <tr><td class="header">Parents email: <td class="data"><input type="email" name="parentsemail" value="'
+  user_record += '    <tr><td class="header">Parents email: <td class="data"><input type="email" name="parentsemail" size="40" value="'
   if 'parentsemail' in record:
     if record['parentsemail'] != None:
       user_record += record['parentsemail']
   user_record += '">'
   user_record += '</td></tr>\n'
 
-  user_record += '    <tr><td class="header">Parents phone: <td class="data"><input type="text" name="parentsphone" value="'
+  user_record += '    <tr><td class="header">Parents phone: <td class="data"><input type="text" name="parentsphone" size="10" maxlenghth="10" value="'
   if 'parentsphone' in record:
     if record['parentsphone'] != None:
       user_record += record['parentsphone']
@@ -528,9 +528,9 @@ def display_athlete_info(environment,record):
 def start_html(config):
   # Build HTML content
   css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+config['s3_html_bucket']+'/css/a2c.css" type="text/css" />'
-  content = "<html><head><title>The Firmu Client Portal</title>\n"
+  content = "<html><head><title>The FirmU Client Portal</title>\n"
   content += css+'</head>'
-  content += '<body><h3 class="title" align="center">The Firmu Client Portal</h3>'
+  content += '<body><h3 class="title" align="center">The FirmU Client Portal</h3>'
 
   return content
 
