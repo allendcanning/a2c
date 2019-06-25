@@ -54,13 +54,15 @@ table {
   columns: 40;
 }
 .button {
-  background-color: #1d2300; /* Green */
+  //background-color: #E4F13A; /* Yellow */
+  background-color: #F19F2F; /* Orange */
   border: none;
-  color: white;
+  color: #000000;
   border-radius: 4px;
-  padding: 10px 20px;
+  padding: 5px 20px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 14px;
+  margin: 10px 0px 0px 0px;
 }
