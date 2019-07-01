@@ -12,10 +12,15 @@ Parameters:
   CognitoDomain:
     Type: String
     Default: thefirmu
-  ContentUrl:
-    Type: String
-    Default: "https://devportal.thefirmu.org"
+  Environment:
+    Type: String 
+    Default: "dev"
 Mappings:
+  PortalName:
+    dev: 
+      DNS: devportal.thefirmu.org
+    prod: 
+      DNS: portal.thefirmu.org
   VPC2Subnet:
     vpc-729d3814:
       Subnets:
@@ -29,7 +34,7 @@ Resources:
       AdminCreateUserConfig:
          AllowAdminCreateUserOnly: True
          InviteMessageTemplate:
-           EmailMessage: "Welcome to The Firmu!  Below you will find your username and temporary password.  Please go to https://devportal.thefirmu.org to change your password.\n\nYour username is {username} and temporary password is {####}. \n\nThank you for being a member of The FirmU!"
+           EmailMessage: !Join ['',["Welcome to The Firmu!  Below you will find your username and temporary password.  Please go to https://", !FindInMap ["PortalName", !Ref Environment, "DNS"], " to change your password.\n\nYour username is {username} and temporary password is {####}. \n\nThank you for being a member of The FirmU!"]]
            EmailSubject: "Welcome to The FirmU!"
       AutoVerifiedAttributes:
         - email
@@ -40,7 +45,7 @@ Resources:
         EmailSendingAccount: DEVELOPER
         ReplyToEmailAddress: admin@thefirmu.org
         SourceArn: !Join ['',['arn:aws:ses:',!Ref "AWS::Region",':',!Ref "AWS::AccountId",':identity/admin@thefirmu.org']]
-      EmailVerificationMessage: "Your FirmU verification code is {####}. Please go to https://devportal.thefirmu.org"
+      EmailVerificationMessage: !Join ['',["Your FirmU verification code is {####}. Please go to https://", !FindInMap ["PortalName", !Ref Environment, "DNS"]]]
       EmailVerificationSubject: "Your FirmU verification code"
       MfaConfiguration: "OFF"
       Policies:
@@ -78,8 +83,8 @@ Resources:
       UserPoolClientId: !Ref theFirmuCognitoClient
       SupportedIdentityProviders:
         - COGNITO
-      CallbackURL: !Join ['',[!Ref ContentUrl,',https://',!GetAtt ['LoadBalancer','DNSName'],'/oauth2/idpresponse,',!Ref ContentUrl,'/oauth2/idpresponse,https://',!GetAtt ['LoadBalancer','DNSName']]]
-      LogoutURL: !Ref ContentUrl
+      CallbackURL: !Join ['',['https://', !FindInMap ["PortalName", !Ref Environment, "DNS"],',https://',!GetAtt ['LoadBalancer','DNSName'],'/oauth2/idpresponse,',!FindInMap ["PortalName", !Ref Environment, "DNS"],'/oauth2/idpresponse,https://',!GetAtt ['LoadBalancer','DNSName']]]
+      LogoutURL: !FindInMap ["PortalName", !Ref Environment, "DNS"] 
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthFlows:
         - code
@@ -93,8 +98,8 @@ Resources:
       UserPoolClientId: !Ref theFirmuMgmtCognitoClient
       SupportedIdentityProviders:
         - COGNITO
-      CallbackURL: !Join ['',[!Ref ContentUrl,',https://',!GetAtt ['LoadBalancer','DNSName'],'/oauth2/idpresponse,',!Ref ContentUrl,'/oauth2/idpresponse,https://',!GetAtt ['LoadBalancer','DNSName']]]
-      LogoutURL: !Ref ContentUrl
+      CallbackURL: !Join ['',['https://', !FindInMap ["PortalName", !Ref Environment, "DNS"],',https://',!GetAtt ['LoadBalancer','DNSName'],'/oauth2/idpresponse,',!FindInMap ["PortalName", !Ref Environment, "DNS"],'/oauth2/idpresponse,https://',!GetAtt ['LoadBalancer','DNSName']]]
+      LogoutURL: !FindInMap ["PortalName", !Ref Environment, "DNS"] 
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthFlows:
         - code
@@ -185,33 +190,34 @@ Resources:
   cognitoPoolSSM:
     Type: AWS::SSM::Parameter
     Properties: 
-      Name: /a2c/dev/cognito_pool
+      Name: !Join ['',['/a2c/', !Ref Environment, '/cognito_pool']]
       Type: String
       Value: !Ref theFirmuCognitoPool
   cognitoAthleteClientIdSSM:
     Type: AWS::SSM::Parameter
     Properties: 
-      Name: /a2c/dev/athlete_cognito_client_id
+      Name: !Join ['',['/a2c/', !Ref Environment, '/athlete_cognito_client_id']]
       Type: String
       Value: !Ref theFirmuCognitoClient
   cognitoMgmtClientIdSSM:
     Type: AWS::SSM::Parameter
     Properties: 
-      Name: /a2c/dev/mgmt_cognito_client_id
+      Name: !Join ['',['/a2c/', !Ref Environment, '/mgmt_cognito_client_id']]
       Type: String
       Value: !Ref theFirmuMgmtCognitoClient
   cognitoAuthUrlSSM:
     Type: AWS::SSM::Parameter
     Properties:
+      Name: !Join ['',['/a2c/', !Ref Environment, '/cognito_auth_url']]
       Name: /a2c/dev/cognito_auth_url
       Type: String
       Value: !Join ['',['https://',!Ref CognitoDomain,'.auth.us-east-1.amazoncognito.com/oath2/']]
   cognitoContentUrlSSM:
     Type: AWS::SSM::Parameter
     Properties:
-      Name: /a2c/dev/content_url
+      Name: !Join ['',['/a2c/', !Ref Environment, '/content_url']]
       Type: String
-      Value: !Join ['',[!Ref ContentUrl,'/']]
+      Value: !Join ['',['https://',!FindInMap ["PortalName", !Ref Environment, "DNS"], '/']]
   displayPortalFunction:
     Type: AWS::Serverless::Function
     Properties:
