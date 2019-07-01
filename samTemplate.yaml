@@ -84,7 +84,7 @@ Resources:
       SupportedIdentityProviders:
         - COGNITO
       CallbackURL: !Join ['',['https://', !FindInMap ["PortalName", !Ref Environment, "DNS"],',https://',!GetAtt ['LoadBalancer','DNSName'],'/oauth2/idpresponse,',!FindInMap ["PortalName", !Ref Environment, "DNS"],'/oauth2/idpresponse,https://',!GetAtt ['LoadBalancer','DNSName']]]
-      LogoutURL: !FindInMap ["PortalName", !Ref Environment, "DNS"] 
+      LogoutURL: !Join ['',['https://', !FindInMap ["PortalName", !Ref Environment, "DNS"]]]
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthFlows:
         - code
@@ -99,7 +99,7 @@ Resources:
       SupportedIdentityProviders:
         - COGNITO
       CallbackURL: !Join ['',['https://', !FindInMap ["PortalName", !Ref Environment, "DNS"],',https://',!GetAtt ['LoadBalancer','DNSName'],'/oauth2/idpresponse,',!FindInMap ["PortalName", !Ref Environment, "DNS"],'/oauth2/idpresponse,https://',!GetAtt ['LoadBalancer','DNSName']]]
-      LogoutURL: !FindInMap ["PortalName", !Ref Environment, "DNS"] 
+      LogoutURL: !Join ['',['https://', !FindInMap ["PortalName", !Ref Environment, "DNS"]]]
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthFlows:
         - code
