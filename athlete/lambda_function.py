@@ -54,6 +54,10 @@ def get_config_data(environment):
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['content_url'] =response['Parameter']['Value'] 
 
+  ssmpath="/a2c/"+environment+"/transcript_s3_bucket"
+  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+  config['transcript_s3_bucket'] =response['Parameter']['Value'] 
+
   for item in config:
     log_error("Got config key = "+item+" value = "+config[item])
 
@@ -96,7 +100,7 @@ def get_user_data(config,username):
 
   return user_record
 
-def edit_athlete_info(environment,record):
+def edit_athlete_info(config,environment,record):
   user_record = '<form method="post" id="Cancel" action="">\n'
   user_record += '</form>'
   user_record += '<form method="post" action="">\n'
@@ -899,7 +903,7 @@ def lambda_handler(event, context):
 
     # Check for editing
     if action == "edit":
-      content += edit_athlete_info(environment,record)
+      content += edit_athlete_info(config,environment,record)
     else:
       content += display_athlete_info(environment,record)
 
