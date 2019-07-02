@@ -392,8 +392,19 @@ def edit_athlete_info(environment,record):
   
   user_record += '  </table>\n'
   user_record += '</td></tr>\n'
-
   user_record += '</form>'
+
+  user_record += '<form method="post" action="/">\n'
+  user_record += '<input type="hidden" name="action" value="upload">\n'
+  user_record += '  <table class="defTable">\n'
+  user_record += '    <tr><td class="header">Unofficial Transcripts: <td class="athletedata"><input type="file" name="transcript">'
+  user_record += '    </td></tr>\n'
+
+  user_record += '  </table>\n'
+  user_record += '</td></tr>\n'
+  user_record += '</form>'
+  
+
 
   return user_record
 
@@ -666,6 +677,15 @@ def display_athlete_info(environment,record):
   user_record += '</td></tr>\n'
 
   return user_record
+
+def store_transcript(config,username,file):
+  # Get S3 resource
+  s3 = boto3.resource('s3')
+
+  # Build path name
+  s3path = '/'+username+'/'+file
+
+  s3.meta.client.upload_file(Filename=file, Bucket=config['transcript_s3_bucket'], Key=s3path)
 
 def start_html(config):
   # Build HTML content

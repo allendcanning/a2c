@@ -61,6 +61,7 @@ Resources:
           Mutable: True
           Name: email
           Required: True
+#      UserPoolName: !Join ['',["thefirmu-", !Ref Environment]]
       UserPoolName: "thefirmu"
   mgmtPortalCognitoPolicy:
     Type: AWS::IAM::Policy
@@ -111,6 +112,23 @@ Resources:
       ServiceToken: !ImportValue 'a2c-mgmt-stack-CognitoUserDomainLambda'
       UserPoolId: !Ref theFirmuCognitoPool
       Domain: !Ref CognitoDomain
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      BucketName: !Join ['',['a2c-transcripts-',!Ref Environment, '-', !Ref AWS::AccountId,'-s3']]
+      VersioningConfiguration:
+        Status: !Ref Versioning
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - ServerSideEncryptionByDefault:
+            SSEAlgorithm: aws:kms
+            KMSMasterKeyID: bb4063b8-7d2d-4f7c-bb5a-43f13da28ed8
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: TRUE
+        BlockPublicPolicy: TRUE
+        IgnorePublicAcls: TRUE
+        RestrictPublicBuckets: TRUE
   displayPortalRole:
     Type: AWS::IAM::Role
     Properties:
@@ -169,6 +187,23 @@ Resources:
           Resource: !Join ['',['arn:aws:ssm:',!Ref 'AWS::Region',':',!Ref 'AWS::AccountId',':parameter/a2c/*']]
       Roles:
         - !Ref "displayPortalRole"
+  displayPortalS3Policy:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      PolicyName: "a2c.s3.allow"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        -
+          Effect: Allow
+          Action: [
+            's3:PutObject',
+            's3:ListObjects',
+            's3:GetObject'
+          ]
+          Resource: !Join ['',[!GetAtt S3Bucket.Arn, '/*']]
+      Roles:
+        - !Ref "displayPortalRole"
   theFirmuCognitoClient:
     Type: AWS::Cognito::UserPoolClient
     Properties: 
@@ -218,6 +253,12 @@ Resources:
       Name: !Join ['',['/a2c/', !Ref Environment, '/content_url']]
       Type: String
       Value: !Join ['',['https://',!FindInMap ["PortalName", !Ref Environment, "DNS"], '/']]
+  s3BucketSSM:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Join ['',['/a2c/', !Ref Environment, '/transcript_s3_bucket']]
+      Type: String
+      Value: !Ref S3Bucket
   displayPortalFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -297,6 +338,7 @@ Resources:
     Properties: 
       Comment: DNS record for ALB
       HostedZoneName: thefirmu.org.
+#      Name: !Join ['',[!Ref Environment, 'portal.thefirmu.org']]
       Name: devportal.thefirmu.org
       ResourceRecords: 
         - !GetAtt LoadBalancer.DNSName
