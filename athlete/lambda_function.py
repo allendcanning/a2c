@@ -246,7 +246,7 @@ def edit_athlete_info(environment,record):
 
   user_record += '    <tr><td class="header">Current Grade: <td class="data">'
   user_record += '<select name="grade">'
-  grades = [9,10,11,12,PG]
+  grades = [9,10,11,12,'PG']
   for y in grades:
     user_record += '<option value="'+str(y)+'"'
     if 'grade' in record:
