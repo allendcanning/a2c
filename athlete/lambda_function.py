@@ -397,7 +397,7 @@ def edit_athlete_info(environment,record):
   user_record += '<form method="post" action="/">\n'
   user_record += '<input type="hidden" name="action" value="upload">\n'
   user_record += '  <table class="defTable">\n'
-  user_record += '    <tr><td class="header">Unofficial Transcripts: <td class="athletedata"><input type="file" name="transcript">'
+  user_record += '    <tr><td class="header">Unofficial Transcripts: <td class="athletedata"><input type="file" class="fileupload" accept=".pdf" name="transcript">'
   user_record += '<input type="submit" class="button" value="Upload File" name="submit">'
   user_record += '    </td></tr>\n'
 
