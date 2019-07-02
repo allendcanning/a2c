@@ -400,7 +400,7 @@ def edit_athlete_info(config,environment,record):
 
   t = datetime.datetime.utcnow()
   policy = '{ "expiration": '+str(t)+', "conditions": [ {"acl": "bucket-owner-full-control" }, {"bucket": "a2c-transcripts-dev-530317771161-s3" }, {"x-amz-credential": "AKIAIOCUUZY3CYB4EGUA/20190702/us-east-1/s3/aws4_request" }, {"x-amz-server-side-encryption": "aws:kms"}, {"x-amz-algorithm": "AWS4-HMAC-SHA256"}, {"x-amz-date": "20190702T000000Z"} ] }'
-  b64policy = b64.encode(bytes(policy,'UTF-8'))
+  b64policy = base64.b64encode(bytes(policy,'UTF-8'))
 
   user_record += '<form method="post" action="https://'+config['transcript_s3_bucket']+'.s3.amazonaws.com/" enctype="multipart/form-data">\n'
   user_record += '<input type="hidden" name="action" value="upload">\n'
