@@ -201,7 +201,7 @@ def edit_athlete_info(environment,record):
   user_record += '">'
   user_record += '</td></tr>\n'
 
-  user_record += '    <tr><td class="header">Fathers College: <td class="data"><input type="text" name="fatherssport" value="'
+  user_record += '    <tr><td class="header">Fathers Sport: <td class="data"><input type="text" name="fathersport" value="'
   if 'fathersport' in record:
     if record['fathersport'] != None:
       user_record += record['fathersport']
@@ -215,7 +215,7 @@ def edit_athlete_info(environment,record):
   user_record += '">'
   user_record += '</td></tr>\n'
 
-  user_record += '    <tr><td class="header">Mothers College: <td class="data"><input type="text" name="mothersport" value="'
+  user_record += '    <tr><td class="header">Mothers Sport: <td class="data"><input type="text" name="mothersport" value="'
   if 'mothersport' in record:
     if record['mothersport'] != None:
       user_record += record['mothersport']
