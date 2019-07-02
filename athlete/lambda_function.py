@@ -400,7 +400,7 @@ def edit_athlete_info(config,environment,record):
   user_record += '</form>'
 
   t = datetime.now() + timedelta(hours=1)
-  policy = '{ "expiration": '+str(t)+', "conditions": [ {"acl": "bucket-owner-full-control" }, {"bucket": "a2c-transcripts-dev-530317771161-s3" }, {"x-amz-credential": "AKIAIOCUUZY3CYB4EGUA/20190702/us-east-1/s3/aws4_request" }, {"x-amz-server-side-encryption": "aws:kms"}, {"x-amz-algorithm": "AWS4-HMAC-SHA256"}, {"x-amz-date": "20190702T000000Z"} ] }'
+  policy = '{ "expiration": "'+str(t)+'", "conditions": [ {"acl": "bucket-owner-full-control" }, {"bucket": "a2c-transcripts-dev-530317771161-s3" }, {"x-amz-credential": "AKIAIOCUUZY3CYB4EGUA/20190702/us-east-1/s3/aws4_request" }, {"x-amz-server-side-encryption": "aws:kms"}, {"x-amz-algorithm": "AWS4-HMAC-SHA256"}, {"x-amz-date": "20190702T000000Z"} ] }'
   b64policy = base64.b64encode(bytes(policy,'UTF-8'))
 
   user_record += '<form method="post" action="https://'+config['transcript_s3_bucket']+'.s3.amazonaws.com/" enctype="multipart/form-data">\n'
@@ -414,7 +414,7 @@ def edit_athlete_info(config,environment,record):
   user_record += '<input type="hidden" name="x-amz-algorithm" value="AWS4-HMAC-SHA256" />\n'
   user_record += '<input type="hidden" name="x-amz-date" value="20190702T000000Z" />\n'
   user_record += '<input type="hidden" name="policy" value="'+b64policy.decode('UTF-8')+'" />\n'
-  user_record += '<input type="hidden" name="x-amz-signature" value="780cea9bdaa8ac98fbdbd449b055e1932c93732c55620085f2a2e60e23731f08" />\n'
+  user_record += '<input type="hidden" name="x-amz-signature" value="071d9e6d7a0db24d5ab93faa40844da2b252f2ffb4b8c2a81f34f902c41f2af4" />\n'
   user_record += '<input type="file" class="fileupload" name="transcript">\n'
   user_record += '<input type="submit" class="button" value="Upload File" name="submit">\n'
   user_record += '    </td></tr>\n'
