@@ -118,7 +118,7 @@ Resources:
     Properties:
       BucketName: !Join ['',['a2c-transcripts-',!Ref Environment, '-', !Ref "AWS::AccountId",'-s3']]
       VersioningConfiguration:
-        Status: !Ref Versioning
+        Status: Enabled
       BucketEncryption:
         ServerSideEncryptionConfiguration:
         - ServerSideEncryptionByDefault:
