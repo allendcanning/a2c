@@ -215,6 +215,18 @@ def edit_athlete_info(environment,record):
   user_record += '">'
   user_record += '</td></tr>\n'
 
+  user_record += '    <tr><td class="header">Current Grade: <td class="data">'
+  user_record += '<select name="grade">'
+  grades = [9,10,11,12,PG]
+  for y in grades:
+    user_record += '<option value="'+str(y)+'"'
+    if 'grade' in record:
+      if record['grade'] == y:
+        user_record += ' selected'
+    user_record += '>'+str(y)+'</option>'
+  user_record += '</select>'
+  user_record += '</td></tr>\n'
+
   user_record += '    <tr><td class="header">Year of Graduation: <td class="data">'
   user_record += '<select name="yog">'
   for y in range(2020,2028):
@@ -224,6 +236,27 @@ def edit_athlete_info(environment,record):
         user_record += ' selected'
     user_record += '>'+str(y)+'</option>'
   user_record += '</select>'
+  user_record += '</td></tr>\n'
+
+  user_record += '    <tr><td class="header">PSAT (overall): <td class="data"><input type="text" name="psat" value="'
+  if 'psat' in record:
+    if record['psat'] != None:
+      user_record += record['psat']
+  user_record += '">'
+  user_record += '</td></tr>\n'
+
+  user_record += '    <tr><td class="header">SSAT (): <td class="data"><input type="text" name="ssat" value="'
+  if 'ssat' in record:
+    if record['ssat'] != None:
+      user_record += record['ssat']
+  user_record += '">'
+  user_record += '</td></tr>\n'
+
+  user_record += '    <tr><td class="header">ACT: <td class="data"><input type="text" name="act" value="'
+  if 'act' in record:
+    if record['act'] != None:
+      user_record += record['act']
+  user_record += '">'
   user_record += '</td></tr>\n'
 
   user_record += '    <tr><td class="header">ACT: <td class="data"><input type="text" name="act" value="'
@@ -268,7 +301,7 @@ def edit_athlete_info(environment,record):
   user_record += '">'
   user_record += '</td></tr>\n'
 
-  user_record += '    <tr><td class="header">Strong hand: <td class="athletedata"><select name="stronghand">'
+  user_record += '    <tr><td class="header">Dominant side: <td class="athletedata"><select name="stronghand">'
   hands = ['Right', 'Left']
   for h in hands:
     user_record += '<option value="'+h+'"'
@@ -427,9 +460,32 @@ def display_athlete_info(environment,record):
     user_record += '&nbsp;'
   user_record += '    </td></tr>\n'
 
+  user_record += '    <tr><td class="header">Current Grade: </td><td class="data">'
+  if 'grade' in record:
+    user_record += str(record['grade'])
+  else:
+    user_record += '&nbsp;'
+  user_record += '    </td></tr>\n'
+
   user_record += '    <tr><td class="header">YOG: </td><td class="data">'
   if 'yog' in record:
     user_record += str(record['yog'])
+  else:
+    user_record += '&nbsp;'
+  user_record += '    </td></tr>\n'
+
+  user_record += '    <tr><td class="header">PSAT (overall): </td><td class="data">'
+  if 'psat' in record:
+    if record['psat'] != None:
+      user_record += record['psat']
+  else:
+    user_record += '&nbsp;'
+  user_record += '    </td></tr>\n'
+
+  user_record += '    <tr><td class="header">SSAT: </td><td class="data">'
+  if 'ssat' in record:
+    if record['ssat'] != None:
+      user_record += record['ssat']
   else:
     user_record += '&nbsp;'
   user_record += '    </td></tr>\n'
@@ -476,7 +532,7 @@ def display_athlete_info(environment,record):
     user_record += '&nbsp;'
   user_record += '    </td></tr>\n'
 
-  user_record += '    <tr><td class="header">Strong hand: </td><td class="data">'
+  user_record += '    <tr><td class="header">Dominant side: </td><td class="data">'
   if 'stronghand' in record:
     user_record += str(record['stronghand'])
   else:
