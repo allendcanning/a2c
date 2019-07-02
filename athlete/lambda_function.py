@@ -355,10 +355,24 @@ def edit_athlete_info(environment,record):
   user_record += '">'
   user_record += '</td></tr>\n'
 
+  user_record += '    <tr><td class="header">Strenght and Conditioning Stats: <td class="athletedata"><input type="text" name="sandcstats" value="'
+  if 'sandcstats' in record:
+    if record['sandcstats'] != None:
+      user_record += record['sandcstats']
+  user_record += '">'
+  user_record += '</td></tr>\n'
+
   user_record += '    <tr><td class="header">Other Sports: <td class="athletedata"><input type="text" name="othersports" value="'
   if 'othersports' in record:
     if record['othersports'] != None:
       user_record += record['othersports']
+  user_record += '">'
+  user_record += '</td></tr>\n'
+
+  user_record += '    <tr><td class="header">Unique Athletic Ability: <td class="athletedata"><input type="text" name="uniqueability" value="'
+  if 'uniqueability' in record:
+    if record['uniqueability'] != None:
+      user_record += record['uniqueability']
   user_record += '">'
   user_record += '</td></tr>\n'
 
@@ -611,11 +625,25 @@ def display_athlete_info(environment,record):
     user_record += '&nbsp;'
   user_record += '    </td></tr>\n'
 
+  user_record += '    <tr><td class="header">Strength and Condition Stats: </td><td class="data">'
+  if 'sandcstats' in record:
+    user_record += str(record['sandcstats'])
+  else:
+    user_record += '&nbsp;'
+  user_record += '    </td></tr>\n'
+
   user_record += '    <tr><td class="header">Other sports: </td><td class="data">'
   if 'othersports' in record:
     user_record += str(record['othersports'])
   else:
     user_record += '&nbsp;'
+  user_record += '    </td></tr>\n'
+
+  user_record += '    <tr><td class="header">Unique Athletic Ability: </td><td class="data">'
+  if 'uniqueability' in record:
+    user_record += str(record['uniqueability'])
+  else:
+    user_record += 'Example: I can do a backflip in my goalie gear on the ice.'
   user_record += '    </td></tr>\n'
 
   user_record += '    <tr><td class="header">Athletic Statistics: </td><td class="data">'
