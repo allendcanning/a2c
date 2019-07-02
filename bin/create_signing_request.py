@@ -14,13 +14,8 @@
 
 # AWS Version 4 signing example
 
-# DynamoDB API (CreateTable)
-
-# See: http://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html
-# This version makes a POST request and passes request parameters
-# in the body (payload) of the request. Auth information is passed in
-# an Authorization header.
 import sys, os, base64, datetime, hashlib, hmac 
+from datetime import datetime, timedelta
 import requests # pip install requests
 
 # ************* REQUEST VALUES *************
@@ -28,10 +23,9 @@ method = 'POST'
 service = 's3'
 host = 'a2c-transcripts-dev-530317771161-s3.s3.amazonaws.com'
 region = 'us-west-1'
-endpoint = 'https://a2c-transcripts-dev-530317771161-s3.s3.amazonaws.com/'
 
 # Create a date for headers and the credential string
-t = datetime.datetime.utcnow()
+t = datetime.now() + timedelta(hours=9)
 amz_date = t.strftime('%Y%m%dT%H%M%SZ')
 date_stamp = t.strftime('%Y%m%d') # Date w/o time, used in credential scope
 

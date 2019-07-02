@@ -414,7 +414,7 @@ def edit_athlete_info(config,environment,record):
   user_record += '<input type="hidden" name="x-amz-algorithm" value="AWS4-HMAC-SHA256" />\n'
   user_record += '<input type="hidden" name="x-amz-date" value="20190702T000000Z" />\n'
   user_record += '<input type="hidden" name="policy" value="'+b64policy.decode('UTF-8')+'" />\n'
-  user_record += '<input type="hidden" name="x-amz-signature" value="2e5660e9bbef243a73b8b9ddd57975445edf5b852f599132d1a61feffeb57a97" />\n'
+  user_record += '<input type="hidden" name="x-amz-signature" value="780cea9bdaa8ac98fbdbd449b055e1932c93732c55620085f2a2e60e23731f08" />\n'
   user_record += '<input type="file" class="fileupload" name="transcript">\n'
   user_record += '<input type="submit" class="button" value="Upload File" name="submit">\n'
   user_record += '    </td></tr>\n'
