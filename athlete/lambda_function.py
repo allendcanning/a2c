@@ -394,20 +394,36 @@ def edit_athlete_info(environment,record):
   user_record += '</td></tr>\n'
   user_record += '</form>'
 
-  user_record += '<form method="post" action="/">\n'
+  user_record += '<form method="post" action="https://'+config['transcript_s3_bucket']+'.s3.amazonaws.com/" enctype="multipart/form-data">\n'
   user_record += '<input type="hidden" name="action" value="upload">\n'
   user_record += '  <table class="defTable">\n'
-  user_record += '    <tr><td class="header">Unofficial Transcripts: <td class="athletedata"><input type="file" class="fileupload" accept=".pdf" name="transcript">'
+  user_record += '    <tr><td class="header">Unofficial Transcripts: <td class="athletedata">'
+  user_record += '<input type="hidden" name="key" value="'+record['username']+'/${filename}" />'
+  user_record += '<input type="hidden" name="acl" value="bucket-owner-full-control" />'
+  user_record += '<input type="hidden" name="x-amz-signature" value="e3ea5e649d1196ecfc9fa02db15d46250fd0664e92ff84b7c01f66fac865a6cd" /> '
+  user_record += '<input type="hidden" name="x-amz-server-side-encryption" value="aws:kms" /> '
+  user_record += '<input type="hidden" name="x-amz-credential" value="AKIAIOCUUZY3CYB4EGUA/20190702/us-east-1/s3/aws4_request" />'
+  user_record += '<input type="hidden" name="x-amz-algorithm" value="AWS4-HMAC-SHA256" />'
+  user_record += '<input type="hidden" name="x-amz-date" value="20190702T000000Z" />'
+  user_record += '<input type="file" class="fileupload" name="transcript">'
   user_record += '<input type="submit" class="button" value="Upload File" name="submit">'
   user_record += '    </td></tr>\n'
 
   user_record += '  </table>\n'
   user_record += '</td></tr>\n'
   user_record += '</form>'
-  
-
 
   return user_record
+
+def sign(key, msg):
+    return hmac.new(key, msg.encode("utf-8"), hashlib.sha256).digest()
+
+def getSignatureKey(key, date_stamp, regionName, serviceName):
+    kDate = sign(('AWS4' + key).encode('utf-8'), date_stamp)
+    kRegion = sign(kDate, regionName)
+    kService = sign(kRegion, serviceName)
+    kSigning = sign(kService, 'aws4_request')
+    return kSigning
 
 def display_athlete_info(environment,record):
   user_record = '<tr><td>\n'
