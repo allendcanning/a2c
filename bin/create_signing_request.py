@@ -59,13 +59,13 @@ if access_key is None or secret_key is None:
     sys.exit()
 
 
-string_to_sign = post_policy
+string_to_sign = base64.b64encode(bytes(post_policy,'UTF-8'))
 
 # ************* TASK 3: CALCULATE THE SIGNATURE *************
 # Create the signing key using the function defined above.
 signing_key = getSignatureKey(secret_key, date_stamp, region, service)
 
 # Sign the string_to_sign using the signing_key
-signature = hmac.new(signing_key, (string_to_sign).encode('utf-8'), hashlib.sha256).hexdigest()
+signature = hmac.new(signing_key, string_to_sign, hashlib.sha256).hexdigest()
 
 print("Signature = "+signature)

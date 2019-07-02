@@ -404,7 +404,7 @@ def edit_athlete_info(config,environment,record):
   user_record += '    <tr><td class="header">Unofficial Transcripts: <td class="athletedata">'
   user_record += '<input type="hidden" name="key" value="'+record['username']+'/${filename}" />'
   user_record += '<input type="hidden" name="acl" value="bucket-owner-full-control" />'
-  user_record += '<input type="hidden" name="x-amz-signature" value="e3ea5e649d1196ecfc9fa02db15d46250fd0664e92ff84b7c01f66fac865a6cd" /> '
+  user_record += '<input type="hidden" name="x-amz-signature" value="2e5660e9bbef243a73b8b9ddd57975445edf5b852f599132d1a61feffeb57a97" /> '
   user_record += '<input type="hidden" name="x-amz-server-side-encryption" value="aws:kms" /> '
   user_record += '<input type="hidden" name="x-amz-credential" value="AKIAIOCUUZY3CYB4EGUA/20190702/us-east-1/s3/aws4_request" />'
   user_record += '<input type="hidden" name="x-amz-algorithm" value="AWS4-HMAC-SHA256" />'
