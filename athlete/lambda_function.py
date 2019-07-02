@@ -398,7 +398,7 @@ def edit_athlete_info(config,environment,record):
   user_record += '</td></tr>\n'
   user_record += '</form>'
 
-  t = datetime.datetime.utcnow()
+  t = datetime.datetime.utcnow() + timedelta(hours=1)
   policy = '{ "expiration": '+str(t)+', "conditions": [ {"acl": "bucket-owner-full-control" }, {"bucket": "a2c-transcripts-dev-530317771161-s3" }, {"x-amz-credential": "AKIAIOCUUZY3CYB4EGUA/20190702/us-east-1/s3/aws4_request" }, {"x-amz-server-side-encryption": "aws:kms"}, {"x-amz-algorithm": "AWS4-HMAC-SHA256"}, {"x-amz-date": "20190702T000000Z"} ] }'
   b64policy = base64.b64encode(bytes(policy,'UTF-8'))
 
@@ -406,16 +406,16 @@ def edit_athlete_info(config,environment,record):
   user_record += '<input type="hidden" name="action" value="upload">\n'
   user_record += '  <table class="defTable">\n'
   user_record += '    <tr><td class="header">Unofficial Transcripts: <td class="athletedata">'
-  user_record += '<input type="hidden" name="key" value="'+record['username']+'/${filename}" />'
-  user_record += '<input type="hidden" name="acl" value="bucket-owner-full-control" />'
-  user_record += '<input type="hidden" name="policy" value="'+b64policy.decode('UTF-8')+'" />'
-  user_record += '<input type="hidden" name="x-amz-signature" value="2e5660e9bbef243a73b8b9ddd57975445edf5b852f599132d1a61feffeb57a97" /> '
-  user_record += '<input type="hidden" name="x-amz-server-side-encryption" value="aws:kms" /> '
-  user_record += '<input type="hidden" name="x-amz-credential" value="AKIAIOCUUZY3CYB4EGUA/20190702/us-east-1/s3/aws4_request" />'
-  user_record += '<input type="hidden" name="x-amz-algorithm" value="AWS4-HMAC-SHA256" />'
-  user_record += '<input type="hidden" name="x-amz-date" value="20190702T000000Z" />'
-  user_record += '<input type="file" class="fileupload" name="transcript">'
-  user_record += '<input type="submit" class="button" value="Upload File" name="submit">'
+  user_record += '<input type="hidden" name="key" value="'+record['username']+'/${filename}" />\n'
+  user_record += '<input type="hidden" name="acl" value="bucket-owner-full-control" />\n'
+  user_record += '<input type="hidden" name="x-amz-server-side-encryption" value="aws:kms" />\n'
+  user_record += '<input type="hidden" name="x-amz-credential" value="AKIAIOCUUZY3CYB4EGUA/20190702/us-east-1/s3/aws4_request" />\n'
+  user_record += '<input type="hidden" name="x-amz-algorithm" value="AWS4-HMAC-SHA256" />\n'
+  user_record += '<input type="hidden" name="x-amz-date" value="20190702T000000Z" />\n'
+  user_record += '<input type="hidden" name="policy" value="'+b64policy.decode('UTF-8')+'" />\n'
+  user_record += '<input type="hidden" name="x-amz-signature" value="2e5660e9bbef243a73b8b9ddd57975445edf5b852f599132d1a61feffeb57a97" />\n'
+  user_record += '<input type="file" class="fileupload" name="transcript">\n'
+  user_record += '<input type="submit" class="button" value="Upload File" name="submit">\n'
   user_record += '    </td></tr>\n'
 
   user_record += '  </table>\n'
@@ -423,16 +423,6 @@ def edit_athlete_info(config,environment,record):
   user_record += '</form>'
 
   return user_record
-
-def sign(key, msg):
-    return hmac.new(key, msg.encode("utf-8"), hashlib.sha256).digest()
-
-def getSignatureKey(key, date_stamp, regionName, serviceName):
-    kDate = sign(('AWS4' + key).encode('utf-8'), date_stamp)
-    kRegion = sign(kDate, regionName)
-    kService = sign(kRegion, serviceName)
-    kSigning = sign(kService, 'aws4_request')
-    return kSigning
 
 def display_athlete_info(environment,record):
   user_record = '<tr><td>\n'
