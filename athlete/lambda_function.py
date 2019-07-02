@@ -707,7 +707,9 @@ def store_transcript(config,username,file):
 def start_html(config):
   # Build HTML content
   css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+config['s3_html_bucket']+'/athlete/css/a2c.css" type="text/css" />'
-  content = "<html><head><title>The FirmU Client Portal</title>\n"
+  content = "<html><head>"
+  content += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
+  content += "<title>The FirmU Client Portal</title>\n"
   content += css+'\n'
   content += '</head>\n'
   content += '<body><h3 class="title" align="center">The FirmU Client Portal</h3>'
