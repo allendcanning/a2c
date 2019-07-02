@@ -130,7 +130,7 @@ def edit_athlete_info(environment,record):
   user_record += '</td>'
   user_record += '</tr>\n'
 
-  user_record += '    <tr><td class="header">Phone: <td class="data"><input type="text" name="phone" size="10" maxlength="10" value="'
+  user_record += '    <tr><td class="header">Cell Phone: <td class="data"><input type="text" name="phone" size="10" maxlength="10" value="'
   if 'phone' in record:
     if record['phone'] != None:
       user_record += record['phone']
@@ -187,12 +187,41 @@ def edit_athlete_info(environment,record):
   user_record += '">'
   user_record += '</td></tr>\n'
 
-  user_record += '    <tr><td class="header">Parents phone: <td class="data"><input type="text" name="parentsphone" size="10" maxlenghth="10" value="'
+  user_record += '    <tr><td class="header">Parents cell: <td class="data"><input type="text" name="parentsphone" size="10" maxlenghth="10" value="'
   if 'parentsphone' in record:
     if record['parentsphone'] != None:
       user_record += record['parentsphone']
   user_record += '">'
   user_record += '</td></tr>\n'
+
+  user_record += '    <tr><td class="header">Fathers College: <td class="data"><input type="text" name="fathercollege" value="'
+  if 'fathercollege' in record:
+    if record['fathercollege'] != None:
+      user_record += record['fathercollege']
+  user_record += '">'
+  user_record += '</td></tr>\n'
+
+  user_record += '    <tr><td class="header">Fathers College: <td class="data"><input type="text" name="fatherssport" value="'
+  if 'fathersport' in record:
+    if record['fathersport'] != None:
+      user_record += record['fathersport']
+  user_record += '">'
+  user_record += '</td></tr>\n'
+
+  user_record += '    <tr><td class="header">Mothers College: <td class="data"><input type="text" name="mothercollege" value="'
+  if 'mothercollege' in record:
+    if record['mothercollege'] != None:
+      user_record += record['mothercollege']
+  user_record += '">'
+  user_record += '</td></tr>\n'
+
+  user_record += '    <tr><td class="header">Mothers College: <td class="data"><input type="text" name="mothersport" value="'
+  if 'mothersport' in record:
+    if record['mothersport'] != None:
+      user_record += record['mothersport']
+  user_record += '">'
+  user_record += '</td></tr>\n'
+
   user_record += '  </table>\n'
   user_record += '</td></tr>\n'
 
@@ -245,7 +274,7 @@ def edit_athlete_info(environment,record):
   user_record += '">'
   user_record += '</td></tr>\n'
 
-  user_record += '    <tr><td class="header">SSAT (): <td class="data"><input type="text" name="ssat" value="'
+  user_record += '    <tr><td class="header">SSAT (percentile): <td class="data"><input type="text" name="ssat" value="'
   if 'ssat' in record:
     if record['ssat'] != None:
       user_record += record['ssat']
@@ -381,7 +410,7 @@ def display_athlete_info(environment,record):
     user_record += '&nbsp;'
   user_record += '    </td></tr>\n'
    
-  user_record += '    <tr><td class="header">Phone: </td><td class="data">'
+  user_record += '    <tr><td class="header">Cell Phone: </td><td class="data">'
   if 'phone' in record:
     user_record += str(record['phone'])
   else:
@@ -428,12 +457,41 @@ def display_athlete_info(environment,record):
     user_record += '&nbsp;'
   user_record += '    </td></tr>\n'
 
-  user_record += '    <tr><td class="header">Parents Phone: </td><td class="data">'
+  user_record += '    <tr><td class="header">Parents Cell: </td><td class="data">'
   if 'parentsphone' in record:
     user_record += str(record['parentsphone'])
   else:
     user_record += '&nbsp;'
   user_record += '    </td></tr>\n'
+
+  user_record += '    <tr><td class="header">Fathers College: </td><td class="data">'
+  if 'fathercollege' in record:
+    user_record += str(record['fathercollege'])
+  else:
+    user_record += '&nbsp;'
+  user_record += '    </td></tr>\n'
+
+  user_record += '    <tr><td class="header">Father Sport: </td><td class="data">'
+  if 'fathersport' in record:
+    user_record += str(record['fathersport'])
+  else:
+    user_record += '&nbsp;'
+  user_record += '    </td></tr>\n'
+
+  user_record += '    <tr><td class="header">Mothers College: </td><td class="data">'
+  if 'mothercollege' in record:
+    user_record += str(record['mothercollege'])
+  else:
+    user_record += '&nbsp;'
+  user_record += '    </td></tr>\n'
+
+  user_record += '    <tr><td class="header">Mother Sport: </td><td class="data">'
+  if 'mothersport' in record:
+    user_record += str(record['mothersport'])
+  else:
+    user_record += '&nbsp;'
+  user_record += '    </td></tr>\n'
+
   user_record += '  </table>\n'
   user_record += '</td>\n'
   
@@ -482,7 +540,7 @@ def display_athlete_info(environment,record):
     user_record += '&nbsp;'
   user_record += '    </td></tr>\n'
 
-  user_record += '    <tr><td class="header">SSAT: </td><td class="data">'
+  user_record += '    <tr><td class="header">SSAT (percentile): </td><td class="data">'
   if 'ssat' in record:
     if record['ssat'] != None:
       user_record += record['ssat']
