@@ -60,7 +60,7 @@ def get_config_data(environment):
   config['transcript_s3_bucket'] =response['Parameter']['Value'] 
 
   ssmpath="/a2c/"+environment+"/nejll_access_key"
-  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+  response = client.get_parameter(Name=ssmpath,WithDecryption=True)
   config['nejll_access_key'] =response['Parameter']['Value'] 
 
   #for item in config:
