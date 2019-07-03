@@ -59,8 +59,12 @@ def get_config_data(environment):
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
   config['transcript_s3_bucket'] =response['Parameter']['Value'] 
 
-  for item in config:
-    log_error("Got config key = "+item+" value = "+config[item])
+  ssmpath="/a2c/"+environment+"/nejll_access_key"
+  response = client.get_parameter(Name=ssmpath,WithDecryption=False)
+  config['nejll_access_key'] =response['Parameter']['Value'] 
+
+  #for item in config:
+  #  log_error("Got config key = "+item+" value = "+config[item])
 
   return config
 
@@ -399,9 +403,16 @@ def edit_athlete_info(config,environment,record):
   user_record += '</td></tr>\n'
   user_record += '</form>'
 
-  t = datetime.now() + timedelta(hours=1)
-  policy = '{ "expiration": "'+str(t)+'", "conditions": [ {"acl": "bucket-owner-full-control" }, {"bucket": "a2c-transcripts-dev-530317771161-s3" }, {"x-amz-credential": "AKIAIOCUUZY3CYB4EGUA/20190702/us-east-1/s3/aws4_request" }, {"x-amz-server-side-encryption": "aws:kms"}, {"x-amz-algorithm": "AWS4-HMAC-SHA256"}, {"x-amz-date": "20190702T000000Z"} ] }'
-  b64policy = base64.b64encode(bytes(policy,'UTF-8'))
+  t = datetime.now() + timedelta(hours=9)
+  amz_date = t.strftime('%Y%m%dT%H%M%SZ')
+  date_stamp = t.strftime('%Y%m%d') # Date w/o time, used in credential scop
+  policy = '{ "expiration": "'+str(t)+'", "conditions": [ {"acl": "bucket-owner-full-control" }, {"bucket": "'+config['transcript_s3_bucket']+'" }, {"x-amz-credential": "AKIAIOCUUZY3CYB4EGUA/20190702/us-east-1/s3/aws4_request" }, {"x-amz-server-side-encryption": "aws:kms"}, {"x-amz-algorithm": "AWS4-HMAC-SHA256"}, {"x-amz-date": "'+amz_date+'"} ] }'
+  string_to_sign = base64.b64encode(bytes(policy,'UTF-8'))
+
+  signing_key = getSignatureKey(config['nejll_access_key'], date_stamp, 'us-east-1', 's3')
+
+  # Sign the string_to_sign using the signing_key
+  signature = hmac.new(signing_key, string_to_sign, hashlib.sha256).hexdigest()
 
   user_record += '<form method="post" accept-charset="UTF-8" action="https://'+config['transcript_s3_bucket']+'.s3.amazonaws.com/" enctype="multipart/form-data">\n'
   user_record += '<input type="hidden" name="action" value="upload">\n'
@@ -412,9 +423,9 @@ def edit_athlete_info(config,environment,record):
   user_record += '<input type="hidden" name="x-amz-server-side-encryption" value="aws:kms" />\n'
   user_record += '<input type="hidden" name="x-amz-credential" value="AKIAIOCUUZY3CYB4EGUA/20190702/us-east-1/s3/aws4_request" />\n'
   user_record += '<input type="hidden" name="x-amz-algorithm" value="AWS4-HMAC-SHA256" />\n'
-  user_record += '<input type="hidden" name="x-amz-date" value="20190702T000000Z" />\n'
-  user_record += '<input type="hidden" name="policy" value="'+b64policy.decode('UTF-8')+'" />\n'
-  user_record += '<input type="hidden" name="x-amz-signature" value="071d9e6d7a0db24d5ab93faa40844da2b252f2ffb4b8c2a81f34f902c41f2af4" />\n'
+  user_record += '<input type="hidden" name="x-amz-date" value="'+amz_date+'" />\n'
+  user_record += '<input type="hidden" name="policy" value="'+string_to_sign.decode('UTF-8')+'" />\n'
+  user_record += '<input type="hidden" name="x-amz-signature" value="'+signature+'" />\n'
   user_record += '<input type="file" class="fileupload" name="transcript">\n'
   user_record += '<input type="submit" class="button" value="Upload File" name="submit">\n'
   user_record += '    </td></tr>\n'
@@ -424,6 +435,16 @@ def edit_athlete_info(config,environment,record):
   user_record += '</form>'
 
   return user_record
+
+def sign(key, msg):
+    return hmac.new(key, msg.encode("utf-8"), hashlib.sha256).digest()
+
+def getSignatureKey(key, date_stamp, regionName, serviceName):
+    kDate = sign(('AWS4' + key).encode('utf-8'), date_stamp)
+    kRegion = sign(kDate, regionName)
+    kService = sign(kRegion, serviceName)
+    kSigning = sign(kService, 'aws4_request')
+    return kSigning
 
 def display_athlete_info(environment,record):
   user_record = '<tr><td>\n'
