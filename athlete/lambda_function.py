@@ -405,28 +405,38 @@ def edit_athlete_info(config,environment,record):
 
   t = datetime.now() + timedelta(hours=9)
   amz_date = t.strftime('%Y%m%dT%H%M%SZ')
+  region = 'us-east-1'
+  service = 's3'
   date_stamp = t.strftime('%Y%m%d') # Date w/o time, used in credential scop
-  policy = '{ "expiration": "'+str(t)+'", "conditions": [ {"acl": "bucket-owner-full-control" }, {"bucket": "'+config['transcript_s3_bucket']+'" }, {"x-amz-credential": "AKIAIOCUUZY3CYB4EGUA/20190702/us-east-1/s3/aws4_request" }, {"x-amz-server-side-encryption": "aws:kms"}, {"x-amz-algorithm": "AWS4-HMAC-SHA256"}, {"x-amz-date": "'+amz_date+'"} ] }'
+  acl = 'bucket-owner-full-control'
+  amz_credential = 'AKIAIOCUUZY3CYB4EGUA/'+date_stamp+'/'+region+'/'+service+'/aws4_request'
+  amz_server_side_encryption = 'aws:kms'
+  amz_algorithm = 'AWS4-HMAC-SHA256'
+
+  policy = '{ "expiration": "'+str(t)+'", "conditions": [ {"acl": '+acl+'" }, {"bucket": "'+config['transcript_s3_bucket']+'" }, {"x-amz-credential": "'+amz_credential+'" }, {"x-amz-server-side-encryption": "'+amz_server_side_encryption+'"}, {"x-amz-algorithm": "'+amz_algorithm+'"}, {"x-amz-date": "'+amz_date+'"} ] }'
   string_to_sign = base64.b64encode(bytes(policy,'UTF-8'))
 
-  signing_key = getSignatureKey(config['nejll_access_key'], date_stamp, 'us-east-1', 's3')
+  signing_key = getSignatureKey(config['nejll_access_key'], date_stamp, region, service)
 
   # Sign the string_to_sign using the signing_key
   signature = hmac.new(signing_key, string_to_sign, hashlib.sha256).hexdigest()
+
+  # Set variables for form
+  key = record['username']+'/${filename}'
 
   user_record += '<form method="post" accept-charset="UTF-8" action="https://'+config['transcript_s3_bucket']+'.s3.amazonaws.com/" enctype="multipart/form-data">\n'
   user_record += '<input type="hidden" name="action" value="upload">\n'
   user_record += '  <table class="defTable">\n'
   user_record += '    <tr><td class="header">Unofficial Transcripts: <td class="athletedata">'
-  user_record += '<input type="hidden" name="key" value="'+record['username']+'/${filename}" />\n'
-  user_record += '<input type="hidden" name="acl" value="bucket-owner-full-control" />\n'
-  user_record += '<input type="hidden" name="x-amz-server-side-encryption" value="aws:kms" />\n'
-  user_record += '<input type="hidden" name="x-amz-credential" value="AKIAIOCUUZY3CYB4EGUA/'+date_stamp+'/us-east-1/s3/aws4_request" />\n'
-  user_record += '<input type="hidden" name="x-amz-algorithm" value="AWS4-HMAC-SHA256" />\n'
-  user_record += '<input type="hidden" name="x-amz-date" value="'+amz_date+'" />\n'
+  user_record += '<input type="hidden" name="key" value="'+key.decode('UTF-8')+'" />\n'
+  user_record += '<input type="hidden" name="acl" value="'+acl.decode('UTF-8')+'" />\n'
+  user_record += '<input type="hidden" name="x-amz-server-side-encryption" value="'+amz_server_side_encryption.decode('UTF-8')+'" />\n'
+  user_record += '<input type="hidden" name="x-amz-credential" value="'+amz_credential.decode('UTF-8')+'" />\n'
+  user_record += '<input type="hidden" name="x-amz-algorithm" value="'+amz_algorithm.decode('UTF-8')+'" />\n'
+  user_record += '<input type="hidden" name="x-amz-date" value="'+amz_date.decode('UTF-8')+'" />\n'
   user_record += '<input type="hidden" name="policy" value="'+string_to_sign.decode('UTF-8')+'" />\n'
-  user_record += '<input type="hidden" name="x-amz-signature" value="'+signature+'" />\n'
-  user_record += '<input type="file" class="fileupload" name="transcript">\n'
+  user_record += '<input type="hidden" name="x-amz-signature" value="'+signature.decode('UTF-8')+'" />\n'
+  user_record += '<input type="file" class="fileupload" name="file">\n'
   user_record += '<input type="submit" class="button" value="Upload File" name="submit">\n'
   user_record += '    </td></tr>\n'
 
