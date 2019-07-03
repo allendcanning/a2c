@@ -425,7 +425,6 @@ def edit_athlete_info(config,environment,record):
   key = record['username']+'/${filename}'
 
   user_record += '<form method="post" accept-charset="UTF-8" action="https://'+config['transcript_s3_bucket']+'.s3.amazonaws.com/" enctype="multipart/form-data">\n'
-  user_record += '<input type="hidden" name="action" value="upload">\n'
   user_record += '  <table class="defTable">\n'
   user_record += '    <tr><td class="header">Unofficial Transcripts: <td class="athletedata">'
   user_record += '<input type="hidden" name="key" value="'+key+'" />\n'
