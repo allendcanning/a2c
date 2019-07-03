@@ -434,7 +434,7 @@ def edit_athlete_info(config,environment,record):
   user_record += '<input type="hidden" name="x-amz-credential" value="'+amz_credential+'" />\n'
   user_record += '<input type="hidden" name="x-amz-algorithm" value="'+amz_algorithm+'" />\n'
   user_record += '<input type="hidden" name="x-amz-date" value="'+amz_date+'" />\n'
-  user_record += '<input type="hidden" name="policy" value="'+string_to_sign+'" />\n'
+  user_record += '<input type="hidden" name="policy" value="'+string_to_sign.decode('UTF-8')+'" />\n'
   user_record += '<input type="hidden" name="x-amz-signature" value="'+str(signature)+'" />\n'
   user_record += '<input type="file" class="fileupload" name="file">\n'
   user_record += '<input type="submit" class="button" value="Upload File" name="submit">\n'
