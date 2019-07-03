@@ -421,7 +421,7 @@ def edit_athlete_info(config,environment,record):
   user_record += '<input type="hidden" name="key" value="'+record['username']+'/${filename}" />\n'
   user_record += '<input type="hidden" name="acl" value="bucket-owner-full-control" />\n'
   user_record += '<input type="hidden" name="x-amz-server-side-encryption" value="aws:kms" />\n'
-  user_record += '<input type="hidden" name="x-amz-credential" value="AKIAIOCUUZY3CYB4EGUA/20190702/us-east-1/s3/aws4_request" />\n'
+  user_record += '<input type="hidden" name="x-amz-credential" value="AKIAIOCUUZY3CYB4EGUA/'+date_stamp+'/us-east-1/s3/aws4_request" />\n'
   user_record += '<input type="hidden" name="x-amz-algorithm" value="AWS4-HMAC-SHA256" />\n'
   user_record += '<input type="hidden" name="x-amz-date" value="'+amz_date+'" />\n'
   user_record += '<input type="hidden" name="policy" value="'+string_to_sign.decode('UTF-8')+'" />\n'
