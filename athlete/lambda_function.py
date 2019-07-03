@@ -413,7 +413,7 @@ def edit_athlete_info(config,environment,record):
   amz_server_side_encryption = 'aws:kms'
   amz_algorithm = 'AWS4-HMAC-SHA256'
 
-  policy = '{ "expiration": "'+t.strftime('%Y-%m-%dT%H:%M:%SZ')+'", "conditions": [ {"acl": "'+acl+'" }, {"bucket": "'+config['transcript_s3_bucket']+'" }, ["starts-with", "$key", "'+config['username']+'"], {"x-amz-credential": "'+amz_credential+'" }, {"x-amz-server-side-encryption": "'+amz_server_side_encryption+'"}, {"x-amz-algorithm": "'+amz_algorithm+'"}, {"x-amz-date": "'+amz_date+'"} ] }'
+  policy = '{ "expiration": "'+t.strftime('%Y-%m-%dT%H:%M:%SZ')+'", "conditions": [ {"acl": "'+acl+'" }, {"bucket": "'+config['transcript_s3_bucket']+'" }, ["starts-with", "$key", "'+record['username']+'"], {"x-amz-credential": "'+amz_credential+'" }, {"x-amz-server-side-encryption": "'+amz_server_side_encryption+'"}, {"x-amz-algorithm": "'+amz_algorithm+'"}, {"x-amz-date": "'+amz_date+'"} ] }'
   string_to_sign = base64.b64encode(bytes(policy,'UTF-8'))
 
   signing_key = getSignatureKey(config['nejll_access_key'], date_stamp, region, service)
