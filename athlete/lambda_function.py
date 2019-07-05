@@ -459,7 +459,6 @@ def rm_transcripts(config,username,transcripts):
   # Build objects array
   for t in transcripts:
     s3obj = { 'Key': t }
-    log_error("Object = "+t)
     objects.append(s3obj)
    
   try:
@@ -976,7 +975,6 @@ def lambda_handler(event, context):
         del user_record['action']
         update_user_info(config,user_record)
         if user_record['transcripts']:
-          log_error("Got transcripts = "+user_record['transcripts'])
           rm_transcripts(config,username,user_record['transcripts'])
 
     # Get user data
