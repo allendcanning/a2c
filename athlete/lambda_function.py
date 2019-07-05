@@ -698,15 +698,16 @@ def display_athlete_info(config,environment,record):
     user_record += '&nbsp;'
   user_record += '    </td></tr>\n'
 
-  user_record += '    <tr><td class="header" colspan="2">Unofficial Transcripts: <td class="athletedata">'
+  user_record += '    <tr><td class="header" colspan="2">Unofficial Transcripts:</td></tr>'
 
   transcripts = get_transcripts(config,record['username'])
 
-  user_record += '    <tr><td class="header">Filename</td><td class="header">Last Modified</td></tr>\n'
+  user_record += '    <tr><td class="header">Filename</td><td class="header" align="center">Last Modified</td></tr>\n'
   for t in transcripts:
     if t['Key'].endswith('/'):
       continue
-    user_record += '    <tr><td class="data">'+t['Key']+'</td>'
+    f = t['Key'].split('/')
+    user_record += '    <tr><td class="data">'+f[1]+'</td>'
     user_record += '<td class="data">'+t['LastModified'].strftime('%Y-%m-%d %H:%M')+'</tr>\n'
 
   t = datetime.utcnow() + timedelta(hours=9)
@@ -719,7 +720,7 @@ def display_athlete_info(config,environment,record):
   amz_server_side_encryption = 'aws:kms'
   amz_algorithm = 'AWS4-HMAC-SHA256'
 
-  policy = '{ "expiration": "'+t.strftime('%Y-%m-%dT%H:%M:%SZ')+'", "conditions": [ {"acl": "'+acl+'" }, {"bucket": "'+config['transcript_s3_bucket']+'" }, ["starts-with", "$key", "'+record['username']+'"], {"x-amz-credential": "'+amz_credential+'" }, {"x-amz-server-side-encryption": "'+amz_server_side_encryption+'"}, {"x-amz-algorithm": "'+amz_algorithm+'"}, {"x-amz-date": "'+amz_date+'"} ] }'
+  policy = '{ "expiration": "'+t.strftime('%Y-%m-%dT%H:%M:%SZ')+'", "conditions": [ {"acl": "'+acl+'" }, {"bucket": "'+config['transcript_s3_bucket']+'" }, {"success_action_redirect": "'+config['content_url']+'"}, ["starts-with", "$key", "'+record['username']+'"], {"x-amz-credential": "'+amz_credential+'" }, {"x-amz-server-side-encryption": "'+amz_server_side_encryption+'"}, {"x-amz-algorithm": "'+amz_algorithm+'"}, {"x-amz-date": "'+amz_date+'"} ] }'
   string_to_sign = base64.b64encode(bytes(policy,'UTF-8'))
 
   signing_key = getSignatureKey(config['nejll_access_key'], date_stamp, region, service)
@@ -734,6 +735,7 @@ def display_athlete_info(config,environment,record):
   user_record += '<form method="post" accept-charset="UTF-8" action="https://'+config['transcript_s3_bucket']+'.s3.amazonaws.com/" enctype="multipart/form-data">\n'
   user_record += '<input type="hidden" name="key" value="'+key+'" />\n'
   user_record += '<input type="hidden" name="acl" value="'+acl+'" />\n'
+  user_record += '<input type="hidden" name="success_action_redirect" value="'+config['content_url']+'" />'
   user_record += '<input type="hidden" name="x-amz-server-side-encryption" value="'+amz_server_side_encryption+'" />\n'
   user_record += '<input type="hidden" name="x-amz-credential" value="'+amz_credential+'" />\n'
   user_record += '<input type="hidden" name="x-amz-algorithm" value="'+amz_algorithm+'" />\n'
