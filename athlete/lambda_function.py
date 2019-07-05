@@ -105,7 +105,7 @@ def get_user_data(config,username):
 
   return user_record
 
-def edit_athlete_info(environment,record):
+def edit_athlete_info(config,environment,record):
   user_record = '<form method="post" id="Cancel" action="">\n'
   user_record += '</form>'
   user_record += '<form method="post" action="">\n'
@@ -458,7 +458,7 @@ def rm_transcripts(config,username,transcripts):
     objects.append(s3obj)
    
   try:
-    response = client.delete_objects(Bucket='string', Delete={ 'Objects': objects })
+    response = client.delete_objects(Bucket=config['transcript_s3_bucket'], Delete={ 'Objects': objects })
     log_error('Rm bucket objects response = '+json.dumps(response))
     return True
   except ClientError as e:
@@ -983,7 +983,7 @@ def lambda_handler(event, context):
 
     # Check for editing
     if action == "edit":
-      content += edit_athlete_info(environment,record)
+      content += edit_athlete_info(config,environment,record)
     else:
       content += display_athlete_info(config,environment,record)
 
