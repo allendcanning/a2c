@@ -459,6 +459,7 @@ def rm_transcripts(config,username,transcripts):
   # Build objects array
   for t in transcripts:
     s3obj = { 'Key': t }
+    log_error("Object = "+t)
     objects.append(s3obj)
    
   try:
