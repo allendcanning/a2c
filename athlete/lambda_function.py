@@ -403,7 +403,7 @@ def edit_athlete_info(config,environment,record):
 
   user_record += '<tr><td colspan="3">\n'
   user_record += '  <table class="defTable">\n'
-  user_record += '    <tr><th class="areaHead">Unofficial Transcripts:</th><th class="areaHead"><input class="button" type="submit" name="Submit"><input class="button" type="button" onclick="document.getElementById(\'Cancel\').submit()" value="Cancel" /></th></tr>'
+  user_record += '    <tr><th class="areaHead">Unofficial Transcripts:</th><th class="areaHead" colspan="2"><input class="button" type="submit" name="Submit"><input class="button" type="button" onclick="document.getElementById(\'Cancel\').submit()" value="Cancel" /></th></tr>'
 
   transcripts = get_transcripts(config,record['username'])
 
