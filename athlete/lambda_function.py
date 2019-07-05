@@ -942,9 +942,9 @@ def lambda_handler(event, context):
 
     # Check for editing
     if action == "edit":
-      content += edit_athlete_info(config,environment,record)
+      content += edit_athlete_info(environment,record)
     else:
-      content += display_athlete_info(environment,record)
+      content += display_athlete_info(config,environment,record)
 
     # End of table body and table
     content += "</table>\n"
