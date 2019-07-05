@@ -423,8 +423,8 @@ def get_transcripts(config,username):
     response = client.list_objects_v2(Bucket=config['transcript_s3_bucket'], Prefix=username+'/', Delimiter='/')
     #response = client.list_objects_v2(Bucket=config['transcript_s3_bucket'])
     log_error('S3 Response = '+str(response))
-    if 'Contents' in transcripts:
-      transcripts = response['Contents']
+    if 'Contents' in response['ResponseMetadata']:
+      transcripts = response['ResponseMetadata']['Contents']
       log_error("Transcripts = "+json.dumps(transcripts))
   except ClientError as e:
     log_error("response = "+json.dumps(e.response))
@@ -739,10 +739,12 @@ def display_athlete_info(config,environment,record):
 
   transcripts = get_transcripts(config,record['username'])
 
-  user_record += '<tr><td>\n'
+  user_record += '<tr><td class="header">Filename</td><td class="header">Last Modified</td></tr>\n'
+  user_record += '<tr><td>'
   user_record += '  <table class="defTable">\n'
   for t in transcripts:
-    user_record += '     <tr><td class="athletedata"><a href="https://'+config['transcript_s3_bucket']+'.s3.amazonaws.com/'+t['Key']+'">'+t['Key']+'</a></td></tr>\n'
+    user_record += '     <tr><td class="athletedata"><a href="https://'+config['transcript_s3_bucket']+'.s3.amazonaws.com/'+t['Key']+'">'+t['Key']+'</a></td>'
+    user_record += '         <td class="athletedata">'+t['LastModified']+'</tr>\n'
   user_record += '  </table>\n'
   user_record += '</td></tr>\n'
 
