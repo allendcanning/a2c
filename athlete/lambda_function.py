@@ -770,7 +770,7 @@ def display_athlete_info(config,environment,record):
   key = record['username']+'/${filename}'
 
   user_record += '<tr><td class="header">'
-  user_record += '<form method="post" accept-charset="UTF-8" action="https://'+config['transcript_s3_bucket']+'.s3.amazonaws.com/" enctype="multipart/form-data">\n'
+  user_record += '<form method="post" accept-charset="UTF-8" accept=".pdf" action="https://'+config['transcript_s3_bucket']+'.s3.amazonaws.com/" enctype="multipart/form-data">\n'
   user_record += '<input type="hidden" name="key" value="'+key+'" />\n'
   user_record += '<input type="hidden" name="acl" value="'+acl+'" />\n'
   user_record += '<input type="hidden" name="success_action_redirect" value="'+config['content_url']+'" />'
