@@ -399,47 +399,6 @@ def edit_athlete_info(config,environment,record):
   user_record += '</textarea>'
   user_record += '</td></tr>\n'
   
-  user_record += '  </table>\n'
-  user_record += '</td></tr>\n'
-  user_record += '</form>'
-
-  t = datetime.utcnow() + timedelta(hours=9)
-  amz_date = t.strftime('%Y%m%dT%H%M%SZ')
-  region = 'us-east-1'
-  service = 's3'
-  date_stamp = t.strftime('%Y%m%d') # Date w/o time, used in credential scop
-  acl = 'bucket-owner-full-control'
-  amz_credential = 'AKIAIOCUUZY3CYB4EGUA/'+date_stamp+'/'+region+'/'+service+'/aws4_request'
-  amz_server_side_encryption = 'aws:kms'
-  amz_algorithm = 'AWS4-HMAC-SHA256'
-
-  policy = '{ "expiration": "'+t.strftime('%Y-%m-%dT%H:%M:%SZ')+'", "conditions": [ {"acl": "'+acl+'" }, {"bucket": "'+config['transcript_s3_bucket']+'" }, ["starts-with", "$key", "'+record['username']+'"], {"x-amz-credential": "'+amz_credential+'" }, {"x-amz-server-side-encryption": "'+amz_server_side_encryption+'"}, {"x-amz-algorithm": "'+amz_algorithm+'"}, {"x-amz-date": "'+amz_date+'"} ] }'
-  string_to_sign = base64.b64encode(bytes(policy,'UTF-8'))
-
-  signing_key = getSignatureKey(config['nejll_access_key'], date_stamp, region, service)
-
-  # Sign the string_to_sign using the signing_key
-  signature = hmac.new(signing_key, string_to_sign, hashlib.sha256).hexdigest()
-
-  # Set variables for form
-  key = record['username']+'/${filename}'
-
-  user_record += '<form method="post" accept-charset="UTF-8" action="https://'+config['transcript_s3_bucket']+'.s3.amazonaws.com/" enctype="multipart/form-data">\n'
-  user_record += '  <table class="defTable">\n'
-  user_record += '    <tr><td class="header">Unofficial Transcripts: <td class="athletedata">'
-  user_record += '<input type="hidden" name="key" value="'+key+'" />\n'
-  user_record += '<input type="hidden" name="acl" value="'+acl+'" />\n'
-  user_record += '<input type="hidden" name="x-amz-server-side-encryption" value="'+amz_server_side_encryption+'" />\n'
-  user_record += '<input type="hidden" name="x-amz-credential" value="'+amz_credential+'" />\n'
-  user_record += '<input type="hidden" name="x-amz-algorithm" value="'+amz_algorithm+'" />\n'
-  user_record += '<input type="hidden" name="x-amz-date" value="'+amz_date+'" />\n'
-  user_record += '<input type="hidden" name="policy" value="'+string_to_sign.decode('UTF-8')+'" />\n'
-  user_record += '<input type="hidden" name="x-amz-signature" value="'+str(signature)+'" />\n'
-  user_record += '<input type="file" class="fileupload" name="file">\n'
-  user_record += '<input type="submit" class="button" value="Upload File" name="submit">\n'
-  user_record += '    </td></tr>\n'
-
-  user_record += '  </table>\n'
   user_record += '</td></tr>\n'
   user_record += '</form>'
 
@@ -454,6 +413,21 @@ def getSignatureKey(key, date_stamp, regionName, serviceName):
     kService = sign(kRegion, serviceName)
     kSigning = sign(kService, 'aws4_request')
     return kSigning
+
+def get_transcripts(config,username):
+  client = boto3.client('s3')
+  transcripts = []
+
+  # List objects from username folder
+  try:
+    response = client.list_objects(Bucket=config['transcript_s3_bucket'], Prefix=username+'/*')
+    transcripts = response['Contents']
+    log_error("Transcripts = "+json.dumps(transcripts))
+  except ClientError as e:
+    log_error("response = "+json.dumps(e.response))
+    log_error("Error is "+e.response['Error']['Message'])
+
+  return transcripts
 
 def display_athlete_info(environment,record):
   user_record = '<tr><td>\n'
@@ -720,19 +694,56 @@ def display_athlete_info(environment,record):
   else:
     user_record += '&nbsp;'
   user_record += '    </td></tr>\n'
+
+  t = datetime.utcnow() + timedelta(hours=9)
+  amz_date = t.strftime('%Y%m%dT%H%M%SZ')
+  region = 'us-east-1'
+  service = 's3'
+  date_stamp = t.strftime('%Y%m%d') # Date w/o time, used in credential scop
+  acl = 'bucket-owner-full-control'
+  amz_credential = 'AKIAIOCUUZY3CYB4EGUA/'+date_stamp+'/'+region+'/'+service+'/aws4_request'
+  amz_server_side_encryption = 'aws:kms'
+  amz_algorithm = 'AWS4-HMAC-SHA256'
+
+  policy = '{ "expiration": "'+t.strftime('%Y-%m-%dT%H:%M:%SZ')+'", "conditions": [ {"acl": "'+acl+'" }, {"bucket": "'+config['transcript_s3_bucket']+'" }, ["starts-with", "$key", "'+record['username']+'"], {"x-amz-credential": "'+amz_credential+'" }, {"x-amz-server-side-encryption": "'+amz_server_side_encryption+'"}, {"x-amz-algorithm": "'+amz_algorithm+'"}, {"x-amz-date": "'+amz_date+'"} ] }'
+  string_to_sign = base64.b64encode(bytes(policy,'UTF-8'))
+
+  signing_key = getSignatureKey(config['nejll_access_key'], date_stamp, region, service)
+
+  # Sign the string_to_sign using the signing_key
+  signature = hmac.new(signing_key, string_to_sign, hashlib.sha256).hexdigest()
+
+  # Set variables for form
+  key = record['username']+'/${filename}'
+
+  user_record += '<form method="post" accept-charset="UTF-8" action="https://'+config['transcript_s3_bucket']+'.s3.amazonaws.com/" enctype="multipart/form-data">\n'
+  user_record += '  <table class="defTable">\n'
+  user_record += '    <tr><td class="header">Unofficial Transcripts: <td class="athletedata">'
+  user_record += '<input type="hidden" name="key" value="'+key+'" />\n'
+  user_record += '<input type="hidden" name="acl" value="'+acl+'" />\n'
+  user_record += '<input type="hidden" name="x-amz-server-side-encryption" value="'+amz_server_side_encryption+'" />\n'
+  user_record += '<input type="hidden" name="x-amz-credential" value="'+amz_credential+'" />\n'
+  user_record += '<input type="hidden" name="x-amz-algorithm" value="'+amz_algorithm+'" />\n'
+  user_record += '<input type="hidden" name="x-amz-date" value="'+amz_date+'" />\n'
+  user_record += '<input type="hidden" name="policy" value="'+string_to_sign.decode('UTF-8')+'" />\n'
+  user_record += '<input type="hidden" name="x-amz-signature" value="'+str(signature)+'" />\n'
+  user_record += '<input type="file" class="fileupload" name="file">\n'
+  user_record += '<input type="submit" class="button" value="Upload File" name="submit">\n'
+  user_record += '    </td></tr>\n'
+  user_record += '  </table>\n'
+  user_record += '</td></tr>\n'
+  user_record += '</form>'
+
+  transcripts = get_transcripts(config,record['username'])
+
+  user_record += '<tr><td>\n'
+  user_record += '  <table class="defTable">\n'
+  for t in transcripts:
+    user_record += '     <tr><td class="athletedata"><a href="https://'+config['transcript_s3_bucket']+'.s3.amazonaws.com/'+t['Key']+'">'+t['Key']+'</a></td></tr>\n'
   user_record += '  </table>\n'
   user_record += '</td></tr>\n'
 
   return user_record
-
-def store_transcript(config,username,file):
-  # Get S3 resource
-  s3 = boto3.resource('s3')
-
-  # Build path name
-  s3path = '/'+username+'/'+file
-
-  s3.meta.client.upload_file(Filename=file, Bucket=config['transcript_s3_bucket'], Key=s3path)
 
 def start_html(config):
   # Build HTML content
