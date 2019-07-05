@@ -105,7 +105,7 @@ def get_user_data(config,username):
 
   return user_record
 
-def edit_athlete_info(config,environment,record):
+def edit_athlete_info(environment,record):
   user_record = '<form method="post" id="Cancel" action="">\n'
   user_record += '</form>'
   user_record += '<form method="post" action="">\n'
@@ -429,7 +429,7 @@ def get_transcripts(config,username):
 
   return transcripts
 
-def display_athlete_info(environment,record):
+def display_athlete_info(config,environment,record):
   user_record = '<tr><td>\n'
   user_record += '  <table class="defTable">\n'
   user_record += '    <tr><th class="areaHead">Personal Information:</th><th class="areaHead">'
