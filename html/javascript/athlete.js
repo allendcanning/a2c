@@ -5,6 +5,6 @@ function checkFileType(name) {
       break;
     default:
       alert('The FirmU only allows the upload of PDF files, please convert your document to PDF.');
-      this.value = '';
+      name.value = '';
   }
 }
