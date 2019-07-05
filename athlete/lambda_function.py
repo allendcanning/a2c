@@ -745,8 +745,8 @@ def display_athlete_info(config,environment,record):
   for t in transcripts:
     if t['Key'].endswith('/'):
       continue
-    user_record += '     <tr><td class="athletedata"><a href="https://'+config['transcript_s3_bucket']+'.s3.amazonaws.com/'+t['Key']+'">'+t['Key']+'</a></td>'
-    user_record += '         <td class="athletedata">'+t['LastModified'].strftime('%Y-%m-%d %H:%M')+'</tr>\n'
+    user_record += '     <tr><td class="data">'+t['Key']+'</td>'
+    user_record += '         <td class="data">'+t['LastModified'].strftime('%Y-%m-%d %H:%M')+'</tr>\n'
   user_record += '  </table>\n'
   user_record += '</td></tr>\n'
 
