@@ -201,7 +201,10 @@ Resources:
             's3:ListBucket',
             's3:GetObject'
           ]
-          Resource: !Join ['',[!GetAtt S3Bucket.Arn, '/*']]
+          Resource: [
+            !GetAtt S3Bucket.Arn,
+            !Join ['',[!GetAtt S3Bucket.Arn, '/*']]
+          ]
       Roles:
         - !Ref "displayPortalRole"
   theFirmuCognitoClient:
