@@ -198,7 +198,7 @@ Resources:
           Effect: Allow
           Action: [
             's3:PutObject',
-            's3:ListObjects',
+            's3:ListBucket',
             's3:GetObject'
           ]
           Resource: !Join ['',[!GetAtt S3Bucket.Arn, '/*']]
