@@ -780,7 +780,7 @@ def display_athlete_info(config,environment,record):
   user_record += '<input type="hidden" name="x-amz-date" value="'+amz_date+'" />\n'
   user_record += '<input type="hidden" name="policy" value="'+string_to_sign.decode('UTF-8')+'" />\n'
   user_record += '<input type="hidden" name="x-amz-signature" value="'+str(signature)+'" />\n'
-  user_record += '<input type="file" class="fileupload" name="file">\n'
+  user_record += '<input type="file" class="fileupload" onChange="checkFileType(this);" name="file">\n'
   user_record += '<input type="submit" class="button" value="Upload File" name="submit">\n'
   user_record += '</form>'
   user_record += '    </td></tr>\n'
@@ -791,10 +791,12 @@ def display_athlete_info(config,environment,record):
 def start_html(config):
   # Build HTML content
   css = '<link rel="stylesheet" href="https://s3.amazonaws.com/'+config['s3_html_bucket']+'/athlete/css/a2c.css" type="text/css" />'
+  js = '<script src="https://s3.amazonaws.com/'+config['s3_html_bucket']+'/athlete/javascript/athlete.js"></script>'
   content = "<html><head>"
   content += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
   content += "<title>The FirmU Client Portal</title>\n"
   content += css+'\n'
+  content += js+'\n'
   content += '</head>\n'
   content += '<body><h3 class="title" align="center">The FirmU Client Portal</h3>'
 
