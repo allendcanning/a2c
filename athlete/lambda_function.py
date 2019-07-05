@@ -400,6 +400,21 @@ def edit_athlete_info(environment,record):
   user_record += '</td></tr>\n'
   
   user_record += '</td></tr>\n'
+
+  user_record += '    <tr><th class="areaHead" colspan="2" style="text-align: center; padding: 10px 0px;">Unofficial Transcripts:</th></tr>'
+
+  transcripts = get_transcripts(config,record['username'])
+
+  user_record += '    <tr><td class="header">Filename</td><td class="header">Last Modified</td></tr>\n'
+  for t in transcripts:
+    if t['Key'].endswith('/'):
+      continue
+    f = t['Key'].split('/')
+    user_record += '    <tr><td class="data">'+f[1]+'</td>'
+    user_record += '<td class="data">'+t['LastModified'].strftime('%Y-%m-%d %H:%M')
+    user_record += '<td class="athletedata"><input type="checkbox" name=transcripts[]" value="'+t['Key']+'"> Remove</td>'
+    user_record += '</tr>\n'
+
   user_record += '</form>'
 
   return user_record
@@ -432,11 +447,30 @@ def get_transcripts(config,username):
 
   return transcripts
 
+def rm_transcripts(config,username,transcripts):
+  client = boto3.client('s3')
+
+  objects = []
+  
+  # Build objects array
+  for t in transcripts:
+    s3obj = { 'Key': t }
+    objects.append(s3obj)
+   
+  try:
+    response = client.delete_objects(Bucket='string', Delete={ 'Objects': objects })
+    log_error('Rm bucket objects response = '+json.dumps(response))
+    return True
+  except ClientError as e:
+    log_error("response = "+json.dumps(e.response))
+    log_error("Error is "+e.response['Error']['Message'])
+    return False
+
 def display_athlete_info(config,environment,record):
   user_record = '<tr><td>\n'
   user_record += '  <table class="defTable">\n'
   user_record += '    <tr><th class="areaHead">Personal Information:</th><th class="areaHead">'
-  user_record += '<form method="post" action="">'
+  user_record += '<form method="post" action="/">'
   user_record += '<input type="hidden" name="action" value="edit">'
   user_record += '<input class="button" type="submit" value="Edit">'
   user_record += '</form></th></tr>\n'
@@ -548,7 +582,7 @@ def display_athlete_info(config,environment,record):
   user_record += '<td class="right">\n'
   user_record += '  <table class="defTable">\n'
   user_record += '    <tr><th class="areaHead">Academic Information:</th><th class="areaHead">'
-  user_record += '<form method="post" action="">'
+  user_record += '<form method="post" action="/">'
   user_record += '<input type="hidden" name="action" value="edit">'
   user_record += '<input class="button" type="submit" value="Edit">'
   user_record += '</form></th></tr>\n'
@@ -620,7 +654,7 @@ def display_athlete_info(config,environment,record):
   user_record += '<tr><td colspan="2">\n'
   user_record += '  <table class="defTable">\n'
   user_record += '    <tr><th class="areaHead">Athletic Information:</th><th class="areaHead">'
-  user_record += '<form method="post" action="">'
+  user_record += '<form method="post" action="/">'
   user_record += '<input type="hidden" name="action" value="edit">'
   user_record += '<input class="button" type="submit" value="Edit">'
   user_record += '</form></th></tr>\n'
@@ -933,6 +967,8 @@ def lambda_handler(event, context):
       if user_record['action'] == "Process":
         del user_record['action']
         update_user_info(config,user_record)
+        if not user_record['transcripts']:
+          rm_transcripts(config,username,user_record['transcripts'])
 
     # Get user data
     if username != False:
