@@ -422,10 +422,10 @@ def get_transcripts(config,username):
   try:
     response = client.list_objects_v2(Bucket=config['transcript_s3_bucket'], Prefix=username+'/', Delimiter='/')
     #response = client.list_objects_v2(Bucket=config['transcript_s3_bucket'])
-    log_error('S3 Response = '+str(response))
+    #log_error('S3 Response = '+str(response))
     if 'Contents' in response:
       transcripts = response['Contents']
-      log_error("Transcripts = "+json.dumps(transcripts))
+      #log_error("Transcripts = "+json.dumps(transcripts))
   except ClientError as e:
     log_error("response = "+json.dumps(e.response))
     log_error("Error is "+e.response['Error']['Message'])
@@ -744,7 +744,7 @@ def display_athlete_info(config,environment,record):
   user_record += '  <table class="defTable">\n'
   for t in transcripts:
     user_record += '     <tr><td class="athletedata"><a href="https://'+config['transcript_s3_bucket']+'.s3.amazonaws.com/'+t['Key']+'">'+t['Key']+'</a></td>'
-    user_record += '         <td class="athletedata">'+t['LastModified']+'</tr>\n'
+    user_record += '         <td class="athletedata">'+t['LastModified'].strftime('%Y-%m-%d %H:%M')+'</tr>\n'
   user_record += '  </table>\n'
   user_record += '</td></tr>\n'
 
