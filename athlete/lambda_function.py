@@ -423,8 +423,8 @@ def get_transcripts(config,username):
     response = client.list_objects_v2(Bucket=config['transcript_s3_bucket'], Prefix=username+'/', Delimiter='/')
     #response = client.list_objects_v2(Bucket=config['transcript_s3_bucket'])
     log_error('S3 Response = '+str(response))
-    if 'Contents' in response['ResponseMetadata']:
-      transcripts = response['ResponseMetadata']['Contents']
+    if 'Contents' in response:
+      transcripts = response['Contents']
       log_error("Transcripts = "+json.dumps(transcripts))
   except ClientError as e:
     log_error("response = "+json.dumps(e.response))
