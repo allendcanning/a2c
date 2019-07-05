@@ -420,8 +420,8 @@ def get_transcripts(config,username):
 
   # List objects from username folder
   try:
-    #response = client.list_objects_v2(Bucket=config['transcript_s3_bucket'], Prefix=username+'/*')
-    response = client.list_objects_v2(Bucket=config['transcript_s3_bucket'])
+    response = client.list_objects_v2(Bucket=config['transcript_s3_bucket'], Prefix=username+'/', Delimiter='/')
+    #response = client.list_objects_v2(Bucket=config['transcript_s3_bucket'])
     log_error('S3 Response = '+json.dumps(response))
     if 'Contents' in transcripts:
       transcripts = response['Contents']
