@@ -698,7 +698,7 @@ def display_athlete_info(config,environment,record):
     user_record += '&nbsp;'
   user_record += '    </td></tr>\n'
 
-  user_record += '    <tr><th class="areaHead" colspan="2" align="center">Unofficial Transcripts:</th></tr>'
+  user_record += '    <tr><th class="areaHead" colspan="2" style="text-align: center; padding: 10px 0px;">Unofficial Transcripts:</th></tr>'
 
   transcripts = get_transcripts(config,record['username'])
 
