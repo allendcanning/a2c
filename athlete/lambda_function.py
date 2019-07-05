@@ -973,6 +973,7 @@ def lambda_handler(event, context):
         del user_record['action']
         update_user_info(config,user_record)
         if user_record['transcripts']:
+          log_error("Got transcripts = "+user_record['transcripts'])
           rm_transcripts(config,username,user_record['transcripts'])
 
     # Get user data
