@@ -698,6 +698,17 @@ def display_athlete_info(config,environment,record):
     user_record += '&nbsp;'
   user_record += '    </td></tr>\n'
 
+  user_record += '    <tr><td class="header" colspan="2">Unofficial Transcripts: <td class="athletedata">'
+
+  transcripts = get_transcripts(config,record['username'])
+
+  user_record += '    <tr><td class="header">Filename</td><td class="header">Last Modified</td></tr>\n'
+  for t in transcripts:
+    if t['Key'].endswith('/'):
+      continue
+    user_record += '    <tr><td class="data">'+t['Key']+'</td>'
+    user_record += '<td class="data">'+t['LastModified'].strftime('%Y-%m-%d %H:%M')+'</tr>\n'
+
   t = datetime.utcnow() + timedelta(hours=9)
   amz_date = t.strftime('%Y%m%dT%H%M%SZ')
   region = 'us-east-1'
@@ -719,9 +730,8 @@ def display_athlete_info(config,environment,record):
   # Set variables for form
   key = record['username']+'/${filename}'
 
+  user_record += '<tr><td class="header">'
   user_record += '<form method="post" accept-charset="UTF-8" action="https://'+config['transcript_s3_bucket']+'.s3.amazonaws.com/" enctype="multipart/form-data">\n'
-  user_record += '  <table class="defTable">\n'
-  user_record += '    <tr><td class="header">Unofficial Transcripts: <td class="athletedata">'
   user_record += '<input type="hidden" name="key" value="'+key+'" />\n'
   user_record += '<input type="hidden" name="acl" value="'+acl+'" />\n'
   user_record += '<input type="hidden" name="x-amz-server-side-encryption" value="'+amz_server_side_encryption+'" />\n'
@@ -732,22 +742,8 @@ def display_athlete_info(config,environment,record):
   user_record += '<input type="hidden" name="x-amz-signature" value="'+str(signature)+'" />\n'
   user_record += '<input type="file" class="fileupload" name="file">\n'
   user_record += '<input type="submit" class="button" value="Upload File" name="submit">\n'
-  user_record += '    </td></tr>\n'
-  user_record += '  </table>\n'
-  user_record += '</td></tr>\n'
   user_record += '</form>'
-
-  transcripts = get_transcripts(config,record['username'])
-
-  user_record += '<tr><td class="header">Filename</td><td class="header">Last Modified</td></tr>\n'
-  user_record += '<tr><td>'
-  user_record += '  <table class="defTable">\n'
-  for t in transcripts:
-    if t['Key'].endswith('/'):
-      continue
-    user_record += '     <tr><td class="data">'+t['Key']+'</td>'
-    user_record += '         <td class="data">'+t['LastModified'].strftime('%Y-%m-%d %H:%M')+'</tr>\n'
-  user_record += '  </table>\n'
+  user_record += '    </td></tr>\n'
   user_record += '</td></tr>\n'
 
   return user_record
