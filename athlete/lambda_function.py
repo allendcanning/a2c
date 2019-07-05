@@ -414,7 +414,7 @@ def edit_athlete_info(config,environment,record):
     f = t['Key'].split('/')
     user_record += '    <tr><td class="data">'+f[1]+'</td>'
     user_record += '<td class="data">'+t['LastModified'].strftime('%Y-%m-%d %H:%M')
-    user_record += '<td class="data"><input type="checkbox" name=transcripts" value="'+t['Key']+'"> Remove</td>'
+    user_record += '<td class="data"><input type="checkbox" name="transcripts" value="'+t['Key']+'"> Remove</td>'
     user_record += '</tr>\n'
   user_record += '  </table>\n'
   user_record += '</td></tr>\n'
