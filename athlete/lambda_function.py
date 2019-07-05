@@ -698,11 +698,11 @@ def display_athlete_info(config,environment,record):
     user_record += '&nbsp;'
   user_record += '    </td></tr>\n'
 
-  user_record += '    <tr><td class="header" colspan="2">Unofficial Transcripts:</td></tr>'
+  user_record += '    <tr><th class="areaHead" colspan="2" align="center">Unofficial Transcripts:</th></tr>'
 
   transcripts = get_transcripts(config,record['username'])
 
-  user_record += '    <tr><td class="header">Filename</td><td class="header" align="center">Last Modified</td></tr>\n'
+  user_record += '    <tr><td class="header">Filename</td><td class="header">Last Modified</td></tr>\n'
   for t in transcripts:
     if t['Key'].endswith('/'):
       continue
