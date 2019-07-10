@@ -1,0 +1,32 @@
+{
+    "requestContext": {
+        "elb": {
+            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:530317771161:targetgroup/a2c-s-Targe-1GJ96K1I6ISOG/b002feeae0c81b88"
+        }
+    },
+    "httpMethod": "POST",
+    "path": "/",
+    "queryStringParameters": {},
+    "headers": {
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "en-US,en;q=0.9",
+        "cache-control": "max-age=0",
+        "content-length": "11",
+        "content-type": "application/x-www-form-urlencoded",
+        "host": "devportal.thefirmu.org",
+        "origin": "https://devportal.thefirmu.org",
+        "referer": "https://devportal.thefirmu.org/",
+        "upgrade-insecure-requests": "1",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36",
+        "x-amzn-oidc-accesstoken": "eyJraWQiOiIwZEc5dVFDTFwvbXp2OW84SHMxR2hCZ2VieE1hMWZZUVRNRk1SMUxSaGc1Yz0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlNjhlNWE2Yi1iYmU0LTQyNGQtYTg5ZS00ZjYxZjYzZTRmYmIiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6Im9wZW5pZCIsImF1dGhfdGltZSI6MTU2MjY4NDQ2MywiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfVlVuUkIzcll0IiwiZXhwIjoxNTYyNjg4MDYzLCJpYXQiOjE1NjI2ODQ0NjMsInZlcnNpb24iOjIsImp0aSI6IjI2MDVjNGViLWVmODItNDIxNi1iYWM3LWY0YzEzNDdiNDdlZCIsImNsaWVudF9pZCI6IjYxM2p0ZmFjOHVvcWswYjA4MjdlYWs1bWVkIiwidXNlcm5hbWUiOiJhY2FubmluZyJ9.Cdvw5yxcFTZ-hdmyfdSfFqpbiH6qKBaK8YKw-QPRDr7PF3BfATx_aYmDgrnrOFH8gUDS1t7mW-6i5s_1FZYR7C7439037WfV55XgQMtzAs6gbpL4KjUSaw6mH4A20PZJUvKBudjqQF3bmHZQuI-H5oGj_Sj9yKfo9n-p9tdInMzHds5hiQZFF4gl_-GBjqwiAQbQx7HPwcNP2bA8sVczhkqTkZ97MVSQi492NNeEV6OaHKGnEEtfVtTHDhfNWPNUZ4bGa3FdAIHhUU0V2ScNcG_A70nU4lFpLniOars6fGPrOYOo2zyO2bHOTAq71qyufRffnX3F0ZOfV3mTPdZcbg",
+        "x-amzn-oidc-data": "eyJ0eXAiOiJKV1QiLCJraWQiOiIyN2Y4Y2IwOS04ZTNhLTQxYTUtYmI3ZC1lYjhjMWU5ZGI5OTYiLCJhbGciOiJFUzI1NiIsImlzcyI6Imh0dHBzOi8vY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb20vdXMtZWFzdC0xX1ZVblJCM3JZdCIsImNsaWVudCI6IjYxM2p0ZmFjOHVvcWswYjA4MjdlYWs1bWVkIiwic2lnbmVyIjoiYXJuOmF3czplbGFzdGljbG9hZGJhbGFuY2luZzp1cy1lYXN0LTE6NTMwMzE3NzcxMTYxOmxvYWRiYWxhbmNlci9hcHAvYTJjLXMtTG9hZEItTU1OUUhRRzZMQU0yLzgwZmQ2NDE2MjVlZTdmZDEiLCJleHAiOjE1NjI2ODQ3ODN9.eyJzdWIiOiJlNjhlNWE2Yi1iYmU0LTQyNGQtYTg5ZS00ZjYxZjYzZTRmYmIiLCJlbWFpbCI6ImNhbm5pbmdAY2FubmluZ2JyYW5jaC5jb20iLCJ1c2VybmFtZSI6ImFjYW5uaW5nIiwiZXhwIjoxNTYyNjg0NzgzLCJpc3MiOiJodHRwczovL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tL3VzLWVhc3QtMV9WVW5SQjNyWXQifQ==.wNyze3KiC592tjJpCaIo2JZQMQZ0hOTYWQ-JxTVIs9fHBW8G_IrXASc9SzRzSBfgkZLOFF7ZvAUtblF2LGCZKA==",
+        "x-amzn-oidc-identity": "e68e5a6b-bbe4-424d-a89e-4f61f63e4fbb",
+        "x-amzn-trace-id": "Root=1-5d24acf7-751d299c2d8188ee183c0ed5",
+        "x-forwarded-for": "10.0.0.1",
+        "x-forwarded-port": "443",
+        "x-forwarded-proto": "https"
+    },
+    "body": "YWN0aW9uPWVkaXQ=",
+    "isBase64Encoded": true
+}
