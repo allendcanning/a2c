@@ -61,8 +61,8 @@ Resources:
           Mutable: True
           Name: email
           Required: True
-#      UserPoolName: !Join ['',["thefirmu-", !Ref Environment]]
-      UserPoolName: "thefirmu"
+      UserPoolName: !Join ['',["thefirmu-", !Ref Environment]]
+#      UserPoolName: "thefirmu"
   mgmtPortalCognitoPolicy:
     Type: AWS::IAM::Policy
     Properties:
@@ -132,7 +132,7 @@ Resources:
   displayPortalRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: a2c-role
+      RoleName: !Join ['',['a2c-', !Ref Environment, '-role']]
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       AssumeRolePolicyDocument:
@@ -248,7 +248,6 @@ Resources:
     Type: AWS::SSM::Parameter
     Properties:
       Name: !Join ['',['/a2c/', !Ref Environment, '/cognito_auth_url']]
-      Name: /a2c/dev/cognito_auth_url
       Type: String
       Value: !Join ['',['https://',!Ref CognitoDomain,'.auth.us-east-1.amazoncognito.com/oath2/']]
   cognitoContentUrlSSM:
@@ -311,7 +310,7 @@ Resources:
           AuthenticateCognitoConfig:
             UserPoolArn: !GetAtt theFirmuCognitoPool.Arn
             UserPoolClientId: !Ref theFirmuCognitoClient
-            UserPoolDomain: "thefirmu"
+            UserPoolDomain: !Ref CognitoDomain
           Order: 1
         - Type: forward
           TargetGroupArn: !Ref TargetGroup
@@ -342,8 +341,8 @@ Resources:
     Properties: 
       Comment: DNS record for ALB
       HostedZoneName: thefirmu.org.
-#      Name: !Join ['',[!Ref Environment, 'portal.thefirmu.org']]
-      Name: devportal.thefirmu.org
+      Name: !FindInMap ["PortalName", !Ref Environment, "DNS"]
+#      Name: devportal.thefirmu.org
       ResourceRecords: 
         - !GetAtt LoadBalancer.DNSName
       TTL: 300
