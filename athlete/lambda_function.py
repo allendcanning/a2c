@@ -975,6 +975,7 @@ def lambda_handler(event, context):
       action = user_record['action']
       if user_record['action'] == "Process":
         del user_record['action']
+        del user_record['Submit']
         update_user_info(config,user_record)
         if user_record['transcripts']:
           rm_transcripts(config,username,user_record['transcripts'])
