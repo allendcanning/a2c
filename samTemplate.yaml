@@ -111,7 +111,7 @@ Resources:
     Properties:
       ServiceToken: !ImportValue 'a2c-mgmt-stack-CognitoUserDomainLambda'
       UserPoolId: !Ref theFirmuCognitoPool
-      Domain: !Ref CognitoDomain
+      Domain: !Join ['',[!Ref CognitoDomain, '-', !Ref Environment]]
   S3Bucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Delete
@@ -310,7 +310,7 @@ Resources:
           AuthenticateCognitoConfig:
             UserPoolArn: !GetAtt theFirmuCognitoPool.Arn
             UserPoolClientId: !Ref theFirmuCognitoClient
-            UserPoolDomain: !Ref CognitoDomain
+            UserPoolDomain: !Join ['',[!Ref CognitoDomain,'-',!Ref Environment]]
           Order: 1
         - Type: forward
           TargetGroupArn: !Ref TargetGroup
