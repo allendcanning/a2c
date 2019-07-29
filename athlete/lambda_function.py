@@ -297,13 +297,6 @@ def edit_athlete_info(config,environment,record):
   user_record += '">'
   user_record += '</td></tr>\n'
 
-  user_record += '    <tr><td class="header">ACT: <td class="data"><input type="text" name="act" value="'
-  if 'act' in record:
-    if record['act'] != None:
-      user_record += record['act']
-  user_record += '">'
-  user_record += '</td></tr>\n'
-
   user_record += '    <tr><td class="header">SAT Math: <td class="data"><input type="text" name="satm" value="'
   if 'satm' in record:
     if record['satm'] != None:
@@ -977,7 +970,7 @@ def lambda_handler(event, context):
         del user_record['action']
         del user_record['Submit']
         update_user_info(config,user_record)
-        if user_record['transcripts']:
+        if 'transcripts' in user_record:
           rm_transcripts(config,username,user_record['transcripts'])
 
     # Get user data
