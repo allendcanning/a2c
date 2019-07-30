@@ -17,6 +17,9 @@ from urllib.request import urlopen
 os.environ['TZ'] = 'US/Eastern'
 time.tzset()
 
+# Get Environment
+environment = os.environ['ENVIRONMENT']
+
 # Open DB connection
 dynamodb = boto3.resource('dynamodb')
 
@@ -921,8 +924,6 @@ def lambda_handler(event, context):
 
   log_error("Event = "+json.dumps(event))
 
-  # Get the environment from the context stage
-  environment = "dev"
   # look up the config data using environment
   config = get_config_data(environment)
   

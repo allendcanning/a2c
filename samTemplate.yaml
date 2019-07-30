@@ -268,6 +268,9 @@ Resources:
       Handler: lambda_function.lambda_handler
       CodeUri: ./athlete/
       Role: !GetAtt ["displayPortalRole","Arn"]
+      Environment:
+        Variables:
+          ENVIRONMENT: !Ref Environment
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
