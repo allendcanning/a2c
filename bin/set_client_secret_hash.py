@@ -14,9 +14,8 @@ def Usage():
 def log_error(msg):
     print(msg)
 
-def get_client_secret(session,pool,id):
+def get_client_secret(session,pool,id,environment):
   client = session.client('ssm')
-  environment = "dev"
 
   ssmpath="/a2c/"+environment+"/"+id+"_cognito_client_id"
   response = client.get_parameter(Name=ssmpath,WithDecryption=False)
@@ -52,6 +51,7 @@ def put_ssm_value(session,ssmpath,ssmval):
 parser = OptionParser()
 parser.add_option("-a", "--aws", dest="aws",help="AWS Profile")
 parser.add_option("-p", "--pool", dest="pool",help="Cognito Client Pool")
+parser.add_option("-e", "--env", dest="env",help="App Environment")
 parser.add_option("-c", "--client", dest="client",help="Cognito Client Name")
 parser.add_option("-s", "--ssmpath", dest="ssmpath",help="SSM path")
 parser.add_option("-r", "--region", dest="region",help="AWS Region")
@@ -80,7 +80,11 @@ if not options.ssmpath:
   Usage()
   exit(1)
 
-secret = get_client_secret(session,options.pool,options.client)
+if not options.env:
+  Usage()
+  exit(1)
+
+secret = get_client_secret(session,options.pool,options.client,options.env)
 if secret:
   ret = put_ssm_value(session,options.ssmpath,secret)
   if ret:
